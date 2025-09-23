@@ -1,0 +1,12 @@
+G04 Generated for placeholder only*
+G04 @TF.FileFunction,Border,Mechanical*%
+%FSLAX23Y23*%
+%MOMM*%
+%ADD13C,0.150*%
+D13*
+X0Y0D02*
+X40000Y0D01*
+X40000Y30000D01*
+X0Y30000D01*
+X0Y0D01*
+M02*

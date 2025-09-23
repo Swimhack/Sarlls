@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/green">
+
+    <Switch
+        android:id="@+id/safeSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:scaleX="6.0"
+        android:scaleY="6.0"
+        android:text=""
+        android:textOff=""
+        android:textOn=""
+        android:thumbTint="@android:color/white"
+        android:trackTint="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/safeSwitch"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:text="Battery is connected"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/status_background_green"
+        android:elevation="4dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="12dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" />
+</RelativeLayout>

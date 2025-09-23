@@ -1,0 +1,32 @@
+Designator,Qty,Value,Package,Description,Manufacturer,MPN,JLCPCB Part#,Notes
+U1,1,ESP32-WROOM-32,ESP32-WROOM-32,WiFi + BT Module,Espressif Systems,ESP32-WROOM-32,C82899,Core MCU
+U2,1,LM2596S-3.3,TO-263,3.3V Buck Converter,Texas Instruments,LM2596S-3.3,C9865,12V to 3.3V power supply
+U3,1,AMS1117-5.0,SOT-223,5.0V Linear Regulator,Advanced Monolithic Systems,AMS1117-5.0,C6187,For relay drive
+K1,1,G5LE-1,THT,5V SPDT Signal Relay,Omron,G5LE-1,C35853,Control relay for external contactor
+Q1,1,IRLZ44N,TO-220,N-Channel MOSFET 55V 47A,Infineon,IRLZ44N,C143946,Logic level MOSFET for relay drive
+Q2,1,2N7000,TO-92,N-Channel MOSFET,ON Semiconductor,2N7000,C8545,Status LED driver
+D4,1,MBRS340,DO-201AD,Schottky Diode 3A 40V,ON Semiconductor,MBRS340,C8678,Buck converter diode
+D1,1,1N4007,DO-41,1A 1000V Rectifier Diode,Generic,1N4007,C8598,Flyback protection
+D2,1,LED_Green,0603,Green Status LED,Generic,19-217/GHC-YR1S2/3T,C72043,WiFi connected indicator
+D3,1,LED_Red,0603,Red Status LED,Generic,19-217/R6C-AL1M2VY/3T,C72038,Error/disconnected indicator
+D5,1,SS34,SMA,Schottky Diode 3A 40V,Generic,SS34,C8678,Reverse polarity protection
+R1,1,10K,0603,10K Ohm Resistor,Generic,RC0603FR-0710KL,C25804,ESP32 pull-up
+R2,1,1K,0603,1K Ohm Resistor,Generic,RC0603FR-071KL,C21190,LED current limit
+R3,1,330R,0603,330 Ohm Resistor,Generic,RC0603FR-07330RL,C23138,LED current limit
+R4,1,10K,0603,10K Ohm Pull-up Resistor,Generic,RC0603FR-0710KL,C25804,Button pull-up
+R5,1,10K,0603,10K Ohm Gate Pull-down,Generic,RC0603FR-0710KL,C25804,MOSFET gate pull-down
+R6,1,47K,0603,47K Ohm Feedback Resistor,Generic,RC0603FR-0747KL,C25792,Buck converter feedback
+R7,1,15K,0603,15K Ohm Feedback Resistor,Generic,RC0603FR-0715KL,C22809,Buck converter feedback
+C1,1,470uF,Electrolytic,470uF 25V Electrolytic Capacitor,Generic,ECA-1EM471,C59415,Input filter capacitor
+C2,1,220uF,Electrolytic,220uF 16V Electrolytic Capacitor,Generic,ECA-1CM221,C59461,Output filter capacitor
+C3,1,100nF,0603,100nF 50V Ceramic Capacitor,Generic,CL10B104KB8NNNC,C14663,Decoupling
+C4,1,10uF,0603,10uF 16V Ceramic Capacitor,Generic,CL10A106KA8NNNC,C19702,ESP32 supply
+C5,1,22pF,0603,22pF 50V Ceramic Capacitor,Generic,CL10C220JB8NNNC,C1653,Crystal load
+C6,1,22pF,0603,22pF 50V Ceramic Capacitor,Generic,CL10C220JB8NNNC,C1653,Crystal load
+L1,1,220uH,1210,220uH Power Inductor,Generic,CDRH125/LDNP-221K,C90319,Buck converter inductor
+SW1,1,TACT_6x6,THT,Tactile Switch 6x6mm,Generic,TS-1187A-B-A-B,C318884,Reset/program button
+J1,1,Terminal_Block_2P,THT,2-Pin Terminal Block 5mm,Generic,1757242,C474892,12V power input
+J2,1,Terminal_Block_2P,THT,2-Pin Terminal Block 5mm,Generic,1757242,C474892,Control output to contactor
+J3,1,USB-C,THT,USB-C Programming Connector,Generic,TYPE-C-31-M-12,C165948,Programming/debug
+F1,1,Fuse_5A,5x20mm,5A Fast Blow Fuse,Generic,5ST 5-R,C369874,Input protection
+Y1,1,32.768kHz,3.2x1.5,32.768kHz Crystal,Generic,FC-135,C32346,RTC crystal
