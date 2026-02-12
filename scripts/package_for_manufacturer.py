@@ -48,7 +48,7 @@ EXPECTED_PARTS = {
     "C49678":  "100nF 0805 cap",
     "C17414":  "10K 0805 resistor",
     "C17513":  "1K 0805 resistor",
-    "C1015":   "Ferrite bead 0805",
+    "C127284": "Ferrite bead 0805",
     "C127509": "Tactile switch TL3342",
     "C165948": "USB-C receptacle GCT",
     "C8269":   "Terminal block Phoenix MC",

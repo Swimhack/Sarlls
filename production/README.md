@@ -63,7 +63,7 @@ production/
 | C3,C4,C5 | 100nF | 0805 | C49678 | 3 |
 | R1,R2 | 10K | 0805 | C17414 | 2 |
 | R3,R4,R5 | 1K | 0805 | C17513 | 3 |
-| FB1 | Ferrite Bead | 0805 | C1015 | 1 |
+| FB1 | Ferrite Bead | 0805 | C127284 | 1 |
 | SW1,SW2 | Tactile | 6x6mm | C127509 | 2 |
 | J1 | USB-C | SMD | C165948 | 1 |
 | J2 | Terminal 2-pos | 3.81mm | C8269 | 1 |
