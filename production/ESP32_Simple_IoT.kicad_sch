@@ -829,8 +829,6 @@
     )
   )
 
-  ;; ===== POWER SUPPLY SECTION =====
-  ;; USB-C Connector
   (symbol (lib_id "Connector:USB_C_Receptacle_USB2.0") (at 38.1 63.5 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0001-0001-000000000001)
@@ -844,7 +842,6 @@
     (pin "S1" (uuid 10000001-0001-0001-0001-000000000015))
   )
 
-  ;; Ferrite Bead
   (symbol (lib_id "Device:Ferrite_Bead") (at 63.5 43.18 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0001-0002-000000000001)
@@ -855,7 +852,6 @@
     (pin "2" (uuid 10000001-0001-0001-0002-000000000012))
   )
 
-  ;; Input capacitor 10uF
   (symbol (lib_id "Device:C") (at 76.2 50.8 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0001-0003-000000000001)
@@ -867,7 +863,6 @@
     (pin "2" (uuid 10000001-0001-0001-0003-000000000012))
   )
 
-  ;; AMS1117-3.3 Voltage Regulator
   (symbol (lib_id "Regulator_Linear:AMS1117-3.3") (at 91.44 43.18 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0001-0004-000000000001)
@@ -880,7 +875,6 @@
     (pin "3" (uuid 10000001-0001-0001-0004-000000000013))
   )
 
-  ;; Output capacitor 10uF
   (symbol (lib_id "Device:C") (at 106.68 50.8 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0001-0005-000000000001)
@@ -892,7 +886,6 @@
     (pin "2" (uuid 10000001-0001-0001-0005-000000000012))
   )
 
-  ;; Decoupling capacitor 100nF
   (symbol (lib_id "Device:C") (at 116.84 50.8 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0001-0006-000000000001)
@@ -904,8 +897,6 @@
     (pin "2" (uuid 10000001-0001-0001-0006-000000000012))
   )
 
-  ;; ===== ESP32 MODULE SECTION =====
-  ;; ESP32-WROOM-32
   (symbol (lib_id "MCU_Module:ESP32-WROOM-32") (at 165.1 101.6 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0002-0001-000000000001)
@@ -925,7 +916,6 @@
     (pin "39" (uuid 10000001-0001-0002-0001-000000000039))
   )
 
-  ;; EN pullup resistor 10K
   (symbol (lib_id "Device:R") (at 139.7 83.82 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0002-0002-000000000001)
@@ -937,7 +927,6 @@
     (pin "2" (uuid 10000001-0001-0002-0002-000000000012))
   )
 
-  ;; EN RC delay capacitor 100nF
   (symbol (lib_id "Device:C") (at 139.7 96.52 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0002-0003-000000000001)
@@ -949,7 +938,6 @@
     (pin "2" (uuid 10000001-0001-0002-0003-000000000012))
   )
 
-  ;; IO0/BOOT pullup resistor 10K
   (symbol (lib_id "Device:R") (at 193.04 107.95 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0002-0004-000000000001)
@@ -961,7 +949,6 @@
     (pin "2" (uuid 10000001-0001-0002-0004-000000000012))
   )
 
-  ;; BOOT button
   (symbol (lib_id "Switch:SW_Push") (at 193.04 121.92 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0002-0005-000000000001)
@@ -973,7 +960,6 @@
     (pin "2" (uuid 10000001-0001-0002-0005-000000000012))
   )
 
-  ;; RESET button
   (symbol (lib_id "Switch:SW_Push") (at 127 96.52 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0002-0006-000000000001)
@@ -985,7 +971,6 @@
     (pin "2" (uuid 10000001-0001-0002-0006-000000000012))
   )
 
-  ;; ESP32 decoupling capacitor 100nF (close to 3V3 pin)
   (symbol (lib_id "Device:C") (at 154.94 78.74 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0002-0007-000000000001)
@@ -997,8 +982,6 @@
     (pin "2" (uuid 10000001-0001-0002-0007-000000000012))
   )
 
-  ;; ===== USB-UART SECTION =====
-  ;; CP2102N
   (symbol (lib_id "Interface_USB:CP2102N-A02-GQFN28") (at 63.5 101.6 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0003-0001-000000000001)
@@ -1017,8 +1000,6 @@
     (pin "8" (uuid 10000001-0001-0003-0001-000000000018))
   )
 
-  ;; ===== RELAY DRIVER SECTION =====
-  ;; Relay driver resistor 1K
   (symbol (lib_id "Device:R") (at 220.98 99.06 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0004-0001-000000000001)
@@ -1030,7 +1011,6 @@
     (pin "2" (uuid 10000001-0001-0004-0001-000000000012))
   )
 
-  ;; BC817 transistor
   (symbol (lib_id "Transistor_BJT:BC817") (at 233.68 99.06 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0004-0002-000000000001)
@@ -1043,7 +1023,6 @@
     (pin "3" (uuid 10000001-0001-0004-0002-000000000013))
   )
 
-  ;; Relay SRD-05VDC-SL-C
   (symbol (lib_id "Relay:SANYOU_SRD_Form_C") (at 251.46 83.82 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0004-0003-000000000001)
@@ -1058,7 +1037,6 @@
     (pin "5" (uuid 10000001-0001-0004-0003-000000000015))
   )
 
-  ;; Flyback diode 1N4007 - cathode to +5V, anode to Q1:C (correct flyback orientation)
   (symbol (lib_id "Diode:1N4007") (at 236.22 78.74 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0004-0004-000000000001)
@@ -1070,7 +1048,6 @@
     (pin "2" (uuid 10000001-0001-0004-0004-000000000012))
   )
 
-  ;; Output terminal block
   (symbol (lib_id "Connector_Generic:Conn_01x02") (at 274.32 83.82 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0004-0005-000000000001)
@@ -1082,8 +1059,6 @@
     (pin "2" (uuid 10000001-0001-0004-0005-000000000012))
   )
 
-  ;; ===== STATUS LEDS SECTION =====
-  ;; Power LED (Green) - anode toward R4, cathode toward GND (forward bias)
   (symbol (lib_id "Device:LED") (at 127 48.26 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0005-0001-000000000001)
@@ -1095,7 +1070,6 @@
     (pin "2" (uuid 10000001-0001-0005-0001-000000000012))
   )
 
-  ;; Power LED resistor 1K
   (symbol (lib_id "Device:R") (at 139.7 48.26 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0005-0002-000000000001)
@@ -1107,7 +1081,6 @@
     (pin "2" (uuid 10000001-0001-0005-0002-000000000012))
   )
 
-  ;; Relay status LED (Red) - anode toward R5, cathode toward GND (forward bias)
   (symbol (lib_id "Device:LED") (at 203.2 99.06 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0005-0003-000000000001)
@@ -1119,8 +1092,6 @@
     (pin "2" (uuid 10000001-0001-0005-0003-000000000012))
   )
 
-  ;; ===== POWER SYMBOLS =====
-  ;; GND symbols
   (symbol (lib_id "power:GND") (at 38.1 83.82 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0006-0001-000000000001)
@@ -1225,7 +1196,6 @@
     (pin "1" (uuid 10000001-0001-0006-0013-000000000011))
   )
 
-  ;; +3V3 symbols
   (symbol (lib_id "power:+3V3") (at 99.06 43.18 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0007-0001-000000000001)
@@ -1282,7 +1252,6 @@
     (pin "1" (uuid 10000001-0001-0007-0007-000000000011))
   )
 
-  ;; +5V symbols
   (symbol (lib_id "power:+5V") (at 67.31 43.18 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0008-0001-000000000001)
@@ -1299,9 +1268,7 @@
     (pin "1" (uuid 10000001-0001-0008-0002-000000000011))
   )
 
-  ;; ===== ADDITIONAL COMPONENTS =====
 
-  ;; Relay status LED resistor R5 - 1K (series with D3)
   (symbol (lib_id "Device:R") (at 191.77 99.06 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0005-0004-000000000001)
@@ -1313,7 +1280,6 @@
     (pin "2" (uuid 10000001-0001-0005-0004-000000000012))
   )
 
-  ;; GND for D3 cathode
   (symbol (lib_id "power:GND") (at 210.82 99.06 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0006-0014-000000000001)
@@ -1322,7 +1288,6 @@
     (pin "1" (uuid 10000001-0001-0006-0014-000000000011))
   )
 
-  ;; GND for USB-C shield
   (symbol (lib_id "power:GND") (at 25.4 66.04 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0006-0015-000000000001)
@@ -1331,7 +1296,6 @@
     (pin "1" (uuid 10000001-0001-0006-0015-000000000011))
   )
 
-  ;; +5V for VBUS sense on CP2102N
   (symbol (lib_id "power:+5V") (at 50.8 114.3 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 10000001-0001-0008-0003-000000000001)
@@ -1340,71 +1304,53 @@
     (pin "1" (uuid 10000001-0001-0008-0003-000000000011))
   )
 
-  ;; ===== NO CONNECT FLAGS =====
-  ;; U3:DTR (unused - no auto-reset circuit in simplified design)
   (no_connect (at 76.2 93.98) (uuid 30000001-0001-0001-0001-000000000001))
-  ;; U3:RTS (unused)
   (no_connect (at 76.2 96.52) (uuid 30000001-0001-0001-0002-000000000001))
-  ;; K1:NC pin (relay normally-closed contact, unused)
   (no_connect (at 245.11 82.55) (uuid 30000001-0001-0001-0003-000000000001))
 
-  ;; ===== WIRE CONNECTIONS =====
 
-  ;; --- POWER SUPPLY SECTION ---
-  ;; J1:VBUS to FB1:1 (USB 5V input to ferrite bead)
   (wire (pts (xy 38.1 43.18) (xy 59.69 43.18))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0001-0001-000000000001)
   )
-  ;; +5V bus: FB1:2 to U2:VI (ferrite output through to regulator input)
   (wire (pts (xy 67.31 43.18) (xy 83.82 43.18))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0001-0002-000000000001)
   )
-  ;; +5V bus tap down to C1:1 (input filter cap)
   (wire (pts (xy 76.2 43.18) (xy 76.2 46.99))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0001-0003-000000000001)
   )
-  ;; +3V3 bus: U2:VO to C2/C3 area
   (wire (pts (xy 99.06 43.18) (xy 116.84 43.18))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0001-0004-000000000001)
   )
-  ;; +3V3 bus tap down to C2:1 (output bulk cap)
   (wire (pts (xy 106.68 43.18) (xy 106.68 46.99))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0001-0005-000000000001)
   )
-  ;; +3V3 bus tap down to C3:1 (output decoupling cap)
   (wire (pts (xy 116.84 43.18) (xy 116.84 46.99))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0001-0006-000000000001)
   )
 
-  ;; --- USB DATA LINES ---
-  ;; J1:D+ to U3:D+ (vertical run, same X coordinate)
   (wire (pts (xy 50.8 55.88) (xy 50.8 86.36))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0002-0001-000000000001)
   )
-  ;; J1:D- to U3:D- (vertical run, same X coordinate)
   (wire (pts (xy 50.8 58.42) (xy 50.8 88.9))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0002-0002-000000000001)
   )
-  ;; USB SHIELD to GND
   (wire (pts (xy 25.4 63.5) (xy 25.4 66.04))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0002-0003-000000000001)
   )
-  ;; U3:VBUS sense to +5V
   (wire (pts (xy 50.8 111.76) (xy 50.8 114.3))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0002-0004-000000000001)
   )
 
-  ;; --- UART CONNECTIONS (via net labels) ---
   (label "ESP_TX" (at 180.34 91.44 180)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid 50000001-0001-0001-0001-000000000001)
@@ -1422,23 +1368,18 @@
     (uuid 50000001-0001-0002-0002-000000000001)
   )
 
-  ;; --- EN PIN CIRCUIT ---
-  ;; R1:2 down to C4:1 (EN pullup to delay cap, vertical bus)
   (wire (pts (xy 139.7 87.63) (xy 139.7 92.71))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0003-0001-000000000001)
   )
-  ;; EN branch: horizontal to U1:EN
   (wire (pts (xy 139.7 88.9) (xy 149.86 88.9))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0003-0002-000000000001)
   )
-  ;; SW2:2 horizontal to EN bus
   (wire (pts (xy 127 91.44) (xy 139.7 91.44))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0003-0003-000000000001)
   )
-  ;; Junctions on EN vertical bus
   (junction (at 139.7 88.9) (diameter 0) (color 0 0 0 0)
     (uuid 60000001-0001-0001-0001-000000000001)
   )
@@ -1446,24 +1387,18 @@
     (uuid 60000001-0001-0001-0002-000000000001)
   )
 
-  ;; --- IO0 PIN CIRCUIT ---
-  ;; R2:2 down to SW1:2 (IO0 pullup to boot button, vertical bus)
   (wire (pts (xy 193.04 111.76) (xy 193.04 116.84))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0004-0001-000000000001)
   )
-  ;; IO0 branch: horizontal to U1:IO0
   (wire (pts (xy 193.04 114.3) (xy 180.34 114.3))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0004-0002-000000000001)
   )
-  ;; Junction on IO0 vertical bus
   (junction (at 193.04 114.3) (diameter 0) (color 0 0 0 0)
     (uuid 60000001-0001-0002-0001-000000000001)
   )
 
-  ;; --- RELAY DRIVER CIRCUIT ---
-  ;; U1:IO4 up to y=95.25, then horizontal to R3:1 (routed above R5/D3 area)
   (wire (pts (xy 180.34 99.06) (xy 180.34 95.25))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0005-0001-000000000001)
@@ -1472,7 +1407,6 @@
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0005-0002-000000000001)
   )
-  ;; R3:2 down and right to Q1:B
   (wire (pts (xy 220.98 102.87) (xy 220.98 105.41))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0005-0003-000000000001)
@@ -1485,47 +1419,37 @@
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0005-0005-000000000001)
   )
-  ;; Q1:C up to relay coil- junction node
   (wire (pts (xy 236.22 93.98) (xy 236.22 90.17))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0005-0006-000000000001)
   )
-  ;; Relay coil- junction to K1:1
   (wire (pts (xy 236.22 90.17) (xy 251.46 90.17))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0005-0007-000000000001)
   )
-  ;; D1:A (anode) up to relay coil- junction (flyback return path)
   (wire (pts (xy 236.22 82.55) (xy 236.22 90.17))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0005-0008-000000000001)
   )
-  ;; Junction at relay coil- node (Q1:C, K1:1, D1:A all meet here)
   (junction (at 236.22 90.17) (diameter 0) (color 0 0 0 0)
     (uuid 60000001-0001-0003-0001-000000000001)
   )
-  ;; D1:K (cathode) up to +5V
   (wire (pts (xy 236.22 69.85) (xy 236.22 74.93))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0005-0009-000000000001)
   )
-  ;; +5V bus to K1:2 (coil+)
   (wire (pts (xy 236.22 77.47) (xy 251.46 77.47))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0005-0010-000000000001)
   )
-  ;; Junction on +5V vertical at K1 coil+ height
   (junction (at 236.22 77.47) (diameter 0) (color 0 0 0 0)
     (uuid 60000001-0001-0003-0002-000000000001)
   )
 
-  ;; --- RELAY CONTACTS TO OUTPUT ---
-  ;; K1:COM to J2:1
   (wire (pts (xy 257.81 83.82) (xy 269.24 83.82))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0006-0001-000000000001)
   )
-  ;; K1:NO to J2:2 (L-shape routing)
   (wire (pts (xy 245.11 85.09) (xy 245.11 86.36))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0006-0002-000000000001)
@@ -1535,20 +1459,15 @@
     (uuid 40000001-0001-0006-0003-000000000001)
   )
 
-  ;; --- POWER LED CIRCUIT ---
-  ;; R4:1 to D2:A (resistor output to LED anode)
   (wire (pts (xy 135.89 48.26) (xy 130.81 48.26))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0007-0001-000000000001)
   )
-  ;; D2:K to GND (LED cathode to ground)
   (wire (pts (xy 123.19 48.26) (xy 119.38 48.26))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0007-0002-000000000001)
   )
 
-  ;; --- RELAY STATUS LED CIRCUIT ---
-  ;; U1:IO5 to R5:1 (L-shape: right then up)
   (wire (pts (xy 180.34 101.6) (xy 187.96 101.6))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0008-0001-000000000001)
@@ -1557,18 +1476,15 @@
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0008-0002-000000000001)
   )
-  ;; R5:2 to D3:A (short hop to LED anode)
   (wire (pts (xy 195.58 99.06) (xy 199.39 99.06))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0008-0003-000000000001)
   )
-  ;; D3:K to GND
   (wire (pts (xy 207.01 99.06) (xy 210.82 99.06))
     (stroke (width 0) (type default))
     (uuid 40000001-0001-0008-0004-000000000001)
   )
 
-  ;; --- JUNCTIONS ON +5V BUS ---
   (junction (at 76.2 43.18) (diameter 0) (color 0 0 0 0)
     (uuid 60000001-0001-0004-0001-000000000001)
   )
@@ -1579,7 +1495,6 @@
     (uuid 60000001-0001-0004-0003-000000000001)
   )
 
-  ;; Text annotations
   (text "ESP32 Simple IoT Switch\n\nSimplified design based on Jordan Lake engineering review.\nRemoves problematic CAN, current sensing, and switching converter.\nUSB-C powered, single relay output with WiFi/BLE control.\n\nKey improvements:\n- All ESP32 GND pins connected to main ground\n- Correct flyback diode orientation\n- Proper decoupling on ESP32 VCC\n- RC delay on EN pin for reliable startup\n- Pull-ups on boot/reset pins"
     (at 30.48 152.4 0)
     (effects (font (size 2.54 2.54)) (justify left top))
@@ -1603,6 +1518,158 @@
   (text "RELAY DRIVER\nGPIO4 -> 1K -> BC817 -> Relay"
     (at 210.82 68.58 0)
     (effects (font (size 1.5 1.5)) (justify left top))
+  )
+
+
+  (symbol_instances
+    (path "/10000001-0001-0001-0001-000000000001"
+      (reference "J1") (unit 1) (value "USB_C") (footprint "Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal")
+    )
+    (path "/10000001-0001-0001-0002-000000000001"
+      (reference "FB1") (unit 1) (value "Ferrite_Bead") (footprint "Inductor_SMD:L_0805_2012Metric")
+    )
+    (path "/10000001-0001-0001-0003-000000000001"
+      (reference "C1") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_0805_2012Metric")
+    )
+    (path "/10000001-0001-0001-0004-000000000001"
+      (reference "U2") (unit 1) (value "AMS1117-3.3") (footprint "Package_TO_SOT_SMD:SOT-223-3_TabPin2")
+    )
+    (path "/10000001-0001-0001-0005-000000000001"
+      (reference "C2") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_0805_2012Metric")
+    )
+    (path "/10000001-0001-0001-0006-000000000001"
+      (reference "C3") (unit 1) (value "100nF") (footprint "Capacitor_SMD:C_0805_2012Metric")
+    )
+    (path "/10000001-0001-0002-0001-000000000001"
+      (reference "U1") (unit 1) (value "ESP32-WROOM-32") (footprint "RF_Module:ESP32-WROOM-32")
+    )
+    (path "/10000001-0001-0002-0002-000000000001"
+      (reference "R1") (unit 1) (value "10K") (footprint "Resistor_SMD:R_0805_2012Metric")
+    )
+    (path "/10000001-0001-0002-0003-000000000001"
+      (reference "C4") (unit 1) (value "100nF") (footprint "Capacitor_SMD:C_0805_2012Metric")
+    )
+    (path "/10000001-0001-0002-0004-000000000001"
+      (reference "R2") (unit 1) (value "10K") (footprint "Resistor_SMD:R_0805_2012Metric")
+    )
+    (path "/10000001-0001-0002-0005-000000000001"
+      (reference "SW1") (unit 1) (value "BOOT") (footprint "Button_Switch_SMD:SW_SPST_TL3342")
+    )
+    (path "/10000001-0001-0002-0006-000000000001"
+      (reference "SW2") (unit 1) (value "RESET") (footprint "Button_Switch_SMD:SW_SPST_TL3342")
+    )
+    (path "/10000001-0001-0002-0007-000000000001"
+      (reference "C5") (unit 1) (value "100nF") (footprint "Capacitor_SMD:C_0805_2012Metric")
+    )
+    (path "/10000001-0001-0003-0001-000000000001"
+      (reference "U3") (unit 1) (value "CP2102N") (footprint "Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm")
+    )
+    (path "/10000001-0001-0004-0001-000000000001"
+      (reference "R3") (unit 1) (value "1K") (footprint "Resistor_SMD:R_0805_2012Metric")
+    )
+    (path "/10000001-0001-0004-0002-000000000001"
+      (reference "Q1") (unit 1) (value "BC817") (footprint "Package_TO_SOT_SMD:SOT-23")
+    )
+    (path "/10000001-0001-0004-0003-000000000001"
+      (reference "K1") (unit 1) (value "SRD-05VDC-SL-C") (footprint "Relay_THT:Relay_SPDT_SANYOU_SRD_Series_Form_C")
+    )
+    (path "/10000001-0001-0004-0004-000000000001"
+      (reference "D1") (unit 1) (value "1N4007") (footprint "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal")
+    )
+    (path "/10000001-0001-0004-0005-000000000001"
+      (reference "J2") (unit 1) (value "LOAD") (footprint "Connector_Phoenix_MC:PhoenixContact_MC_1,5_2-G-3.81_1x02_P3.81mm_Horizontal")
+    )
+    (path "/10000001-0001-0005-0001-000000000001"
+      (reference "D2") (unit 1) (value "PWR_LED") (footprint "LED_SMD:LED_0805_2012Metric")
+    )
+    (path "/10000001-0001-0005-0002-000000000001"
+      (reference "R4") (unit 1) (value "1K") (footprint "Resistor_SMD:R_0805_2012Metric")
+    )
+    (path "/10000001-0001-0005-0003-000000000001"
+      (reference "D3") (unit 1) (value "RELAY_LED") (footprint "LED_SMD:LED_0805_2012Metric")
+    )
+    (path "/10000001-0001-0006-0001-000000000001"
+      (reference "#PWR01") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0002-000000000001"
+      (reference "#PWR02") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0003-000000000001"
+      (reference "#PWR03") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0004-000000000001"
+      (reference "#PWR04") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0005-000000000001"
+      (reference "#PWR05") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0006-000000000001"
+      (reference "#PWR06") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0007-000000000001"
+      (reference "#PWR07") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0008-000000000001"
+      (reference "#PWR08") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0009-000000000001"
+      (reference "#PWR09") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0010-000000000001"
+      (reference "#PWR10") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0011-000000000001"
+      (reference "#PWR11") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0012-000000000001"
+      (reference "#PWR12") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0013-000000000001"
+      (reference "#PWR13") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0007-0001-000000000001"
+      (reference "#PWR14") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/10000001-0001-0007-0002-000000000001"
+      (reference "#PWR15") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/10000001-0001-0007-0003-000000000001"
+      (reference "#PWR16") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/10000001-0001-0007-0004-000000000001"
+      (reference "#PWR17") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/10000001-0001-0007-0005-000000000001"
+      (reference "#PWR18") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/10000001-0001-0007-0006-000000000001"
+      (reference "#PWR19") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/10000001-0001-0007-0007-000000000001"
+      (reference "#PWR20") (unit 1) (value "+3V3") (footprint "")
+    )
+    (path "/10000001-0001-0008-0001-000000000001"
+      (reference "#PWR21") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/10000001-0001-0008-0002-000000000001"
+      (reference "#PWR22") (unit 1) (value "+5V") (footprint "")
+    )
+    (path "/10000001-0001-0005-0004-000000000001"
+      (reference "R5") (unit 1) (value "1K") (footprint "Resistor_SMD:R_0805_2012Metric")
+    )
+    (path "/10000001-0001-0006-0014-000000000001"
+      (reference "#PWR23") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0006-0015-000000000001"
+      (reference "#PWR24") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/10000001-0001-0008-0003-000000000001"
+      (reference "#PWR25") (unit 1) (value "+5V") (footprint "")
+    )
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
   )
 
 )
