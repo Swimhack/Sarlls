@@ -1,0 +1,849 @@
+openapi: 3.0.3
+info:
+  title: PCB Manufacturing Devices API
+  description: API for managing PCB devices and manufacturing workflow
+  version: 1.0.0
+  contact:
+    name: PCB Manufacturing System
+    email: support@example.com
+
+servers:
+  - url: /api
+    description: API base path
+
+paths:
+  /devices:
+    get:
+      summary: List devices
+      description: Get all devices for the authenticated user's organization
+      tags: [Devices]
+      parameters:
+        - name: status
+          in: query
+          description: Filter by device status
+          schema:
+            $ref: '#/components/schemas/DeviceStatus'
+        - name: limit
+          in: query
+          description: Maximum number of devices to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Number of devices to skip
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of devices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  devices:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Device'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      summary: Create device
+      description: Create a new PCB device
+      tags: [Devices]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeviceRequest'
+      responses:
+        '201':
+          description: Device created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /devices/{deviceId}:
+    get:
+      summary: Get device
+      description: Get a specific device by ID
+      tags: [Devices]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+      responses:
+        '200':
+          description: Device details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceWithFiles'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    put:
+      summary: Update device
+      description: Update device properties (excluding status)
+      tags: [Devices]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDeviceRequest'
+      responses:
+        '200':
+          description: Device updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      summary: Delete device
+      description: Delete a device (only if status is DRAFT or CANCELLED)
+      tags: [Devices]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+      responses:
+        '204':
+          description: Device deleted successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /devices/{deviceId}/status:
+    put:
+      summary: Update device status
+      description: Update device manufacturing status with validation
+      tags: [Devices]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStatusRequest'
+      responses:
+        '200':
+          description: Status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          description: Invalid status transition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /devices/{deviceId}/files:
+    get:
+      summary: List device files
+      description: Get all files for a specific device
+      tags: [Files]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+        - name: type
+          in: query
+          description: Filter by file type
+          schema:
+            $ref: '#/components/schemas/FileType'
+      responses:
+        '200':
+          description: List of device files
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceFile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      summary: Upload device file
+      description: Upload a new file for the device
+      tags: [Files]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: File to upload
+                fileType:
+                  $ref: '#/components/schemas/FileType'
+                description:
+                  type: string
+                  description: Optional file description
+              required:
+                - file
+                - fileType
+      responses:
+        '201':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceFile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '413':
+          description: File too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /devices/{deviceId}/files/{fileId}:
+    get:
+      summary: Download device file
+      description: Download a specific device file
+      tags: [Files]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+        - $ref: '#/components/parameters/FileId'
+      responses:
+        '200':
+          description: File content
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Attachment filename
+            Content-Length:
+              schema:
+                type: integer
+              description: File size in bytes
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      summary: Delete device file
+      description: Delete a device file (only if device status allows)
+      tags: [Files]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+        - $ref: '#/components/parameters/FileId'
+      responses:
+        '204':
+          description: File deleted successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /devices/{deviceId}/manufacturing-package:
+    post:
+      summary: Generate manufacturing package
+      description: Create a ZIP package with all files for manufacturer submission
+      tags: [Manufacturing]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeneratePackageRequest'
+      responses:
+        '201':
+          description: Manufacturing package created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManufacturingPackage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          description: Device not ready for manufacturing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    get:
+      summary: List manufacturing packages
+      description: Get all generated packages for a device
+      tags: [Manufacturing]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+      responses:
+        '200':
+          description: List of manufacturing packages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  packages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ManufacturingPackage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /devices/{deviceId}/manufacturing-package/{packageId}/download:
+    get:
+      summary: Download manufacturing package
+      description: Download the manufacturing package ZIP file
+      tags: [Manufacturing]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+        - $ref: '#/components/parameters/PackageId'
+      responses:
+        '200':
+          description: Package ZIP file
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Attachment filename
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          description: Package expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /devices/{deviceId}/history:
+    get:
+      summary: Get device status history
+      description: Get the complete status change history for a device
+      tags: [Devices]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+      responses:
+        '200':
+          description: Status change history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  history:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StatusHistory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  parameters:
+    DeviceId:
+      name: deviceId
+      in: path
+      required: true
+      description: Device unique identifier
+      schema:
+        type: string
+        format: uuid
+
+    FileId:
+      name: fileId
+      in: path
+      required: true
+      description: File unique identifier
+      schema:
+        type: string
+        format: uuid
+
+    PackageId:
+      name: packageId
+      in: path
+      required: true
+      description: Package unique identifier
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+        version:
+          type: string
+          pattern: '^\d+\.\d+\.\d+$'
+        status:
+          $ref: '#/components/schemas/DeviceStatus'
+        boardDimensions:
+          $ref: '#/components/schemas/BoardDimensions'
+        layerCount:
+          type: integer
+          minimum: 1
+          maximum: 32
+          nullable: true
+        componentCount:
+          type: integer
+          minimum: 0
+          nullable: true
+        createdBy:
+          type: string
+          format: uuid
+        organizationId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - version
+        - status
+        - createdBy
+        - organizationId
+        - createdAt
+        - updatedAt
+
+    DeviceWithFiles:
+      allOf:
+        - $ref: '#/components/schemas/Device'
+        - type: object
+          properties:
+            files:
+              type: array
+              items:
+                $ref: '#/components/schemas/DeviceFile'
+            statusHistory:
+              type: array
+              items:
+                $ref: '#/components/schemas/StatusHistory'
+
+    DeviceStatus:
+      type: string
+      enum:
+        - draft
+        - review
+        - ready_for_manufacturing
+        - submitted
+        - in_production
+        - completed
+        - cancelled
+
+    BoardDimensions:
+      type: object
+      properties:
+        width:
+          type: number
+          minimum: 0
+        height:
+          type: number
+          minimum: 0
+        thickness:
+          type: number
+          minimum: 0
+      nullable: true
+
+    DeviceFile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        deviceId:
+          type: string
+          format: uuid
+        fileName:
+          type: string
+        fileType:
+          $ref: '#/components/schemas/FileType'
+        fileSize:
+          type: integer
+          minimum: 0
+        filePath:
+          type: string
+        contentHash:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/FileMetadata'
+        uploadedBy:
+          type: string
+          format: uuid
+        uploadedAt:
+          type: string
+          format: date-time
+        version:
+          type: integer
+          minimum: 1
+      required:
+        - id
+        - deviceId
+        - fileName
+        - fileType
+        - fileSize
+        - filePath
+        - contentHash
+        - uploadedBy
+        - uploadedAt
+        - version
+
+    FileType:
+      type: string
+      enum:
+        - gerber_zip
+        - bom_csv
+        - cpl_csv
+        - schematic_pdf
+        - technical_spec
+        - assembly_drawing
+        - test_procedure
+        - other
+
+    FileMetadata:
+      type: object
+      properties:
+        gerber:
+          type: object
+          properties:
+            layerCount:
+              type: integer
+            boardOutline:
+              type: boolean
+            drillFiles:
+              type: integer
+            fabricationNotes:
+              type: string
+        bom:
+          type: object
+          properties:
+            componentCount:
+              type: integer
+            uniqueParts:
+              type: integer
+            estimatedCost:
+              type: number
+            missingParts:
+              type: array
+              items:
+                type: string
+        cpl:
+          type: object
+          properties:
+            placementCount:
+              type: integer
+            topSideComponents:
+              type: integer
+            bottomSideComponents:
+              type: integer
+            rotationFormat:
+              type: string
+
+    StatusHistory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        deviceId:
+          type: string
+          format: uuid
+        previousStatus:
+          $ref: '#/components/schemas/DeviceStatus'
+        newStatus:
+          $ref: '#/components/schemas/DeviceStatus'
+        changedBy:
+          type: string
+          format: uuid
+        changedAt:
+          type: string
+          format: date-time
+        notes:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties: true
+      required:
+        - id
+        - deviceId
+        - previousStatus
+        - newStatus
+        - changedBy
+        - changedAt
+
+    ManufacturingPackage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        deviceId:
+          type: string
+          format: uuid
+        packageName:
+          type: string
+        packagePath:
+          type: string
+        fileCount:
+          type: integer
+          minimum: 0
+        totalSize:
+          type: integer
+          minimum: 0
+        checksum:
+          type: string
+        generatedBy:
+          type: string
+          format: uuid
+        generatedAt:
+          type: string
+          format: date-time
+        expiryDate:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - deviceId
+        - packageName
+        - packagePath
+        - fileCount
+        - totalSize
+        - checksum
+        - generatedBy
+        - generatedAt
+
+    CreateDeviceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+        version:
+          type: string
+          pattern: '^\d+\.\d+\.\d+$'
+          default: '1.0.0'
+      required:
+        - name
+
+    UpdateDeviceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+        version:
+          type: string
+          pattern: '^\d+\.\d+\.\d+$'
+
+    UpdateStatusRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/DeviceStatus'
+        notes:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+      required:
+        - status
+
+    GeneratePackageRequest:
+      type: object
+      properties:
+        packageName:
+          type: string
+          description: Custom package name (optional)
+        includeTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileType'
+          description: File types to include (default: all)
+        expiryHours:
+          type: integer
+          minimum: 1
+          maximum: 8760
+          default: 168
+          description: Package expiry in hours (default: 7 days)
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        code:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+      required:
+        - error
+        - message
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Conflict:
+      description: Resource conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

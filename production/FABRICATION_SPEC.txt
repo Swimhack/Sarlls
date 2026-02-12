@@ -1,0 +1,148 @@
+================================================================================
+                    SARLLS IoT SMART SWITCH - FABRICATION SPECIFICATION
+                              Rev 1.1 | 2026-02-11
+                         Strickland Technology Marketing
+                          Contact: james@strickland.technology
+                          Phone:   713-444-6732
+================================================================================
+
+1. PROJECT SUMMARY
+--------------------------------------------------------------------------------
+Product:      ESP32 Simple IoT Switch
+Purpose:      WiFi/BLE-controlled relay switch for IoT prototype
+Quantity:     5 prototype boards + SMT assembly
+Turnaround:   Standard (5-7 business days acceptable)
+
+2. PCB SPECIFICATIONS
+--------------------------------------------------------------------------------
+Board Size:         60mm x 40mm
+Layer Count:        2 (Top copper + Bottom copper)
+Board Thickness:    1.6mm
+Material:           FR-4 (Tg >= 130C)
+Copper Weight:      1 oz (35um) both layers
+Surface Finish:     HASL lead-free (or ENIG if cost-comparable)
+Solder Mask:        Green, both sides
+Silkscreen:         White, top side
+Min Trace Width:    0.25mm (10 mil) signal, 0.5mm (20 mil) power
+Min Trace Space:    0.2mm (8 mil)
+Min Via Drill:      0.3mm
+Via Pad Diameter:   0.6mm
+Board Outline:      Rounded corners, 1mm radius
+Mounting Holes:     4x M2.5 (2.7mm drill), corners at (3,3), (57,3), (3,37), (57,37)
+
+3. DESIGN STATUS
+--------------------------------------------------------------------------------
+  [COMPLETE]  Schematic - fully wired, all nets defined
+  [COMPLETE]  PCB footprint placement and zone definitions
+  [COMPLETE]  Bottom-layer GND plane with via stitching
+  [COMPLETE]  Antenna keepout zone (no copper under ESP32 antenna)
+  [COMPLETE]  BOM with verified JLCPCB LCSC part numbers
+  [COMPLETE]  Component placement list (CPL)
+  [COMPLETE]  Test firmware (Arduino + PlatformIO)
+
+  [NEEDS WORK]  PCB copper trace routing
+  [NEEDS WORK]  Gerber file generation
+
+  NOTE: If your facility offers turnkey design-to-fab service,
+  the KiCad 6+ source files are included for your engineers to
+  complete the routing and generate Gerbers. All nets, zones,
+  keepouts, and placement are defined.
+
+  If you require pre-routed Gerbers, please advise and we will
+  provide them after completing routing in KiCad.
+
+4. ASSEMBLY REQUIREMENTS
+--------------------------------------------------------------------------------
+Assembly Type:      Mixed (SMT + Through-Hole)
+SMT Side:           Top only
+Through-Hole:       K1 (relay), D1 (diode), J2 (terminal block)
+
+SMT Components (19 placements):
+  - U1: ESP32-WROOM-32 (RF module, large footprint)
+  - U2: AMS1117-3.3 (SOT-223)
+  - U3: CP2102N (QFN-28 5x5mm, 0.5mm pitch - requires stencil)
+  - Q1: BC817 (SOT-23)
+  - C1-C5: Capacitors (0805)
+  - R1-R5: Resistors (0805)
+  - D2, D3: LEDs (0805)
+  - FB1: Ferrite bead (0805)
+  - SW1, SW2: Tactile switches (TL3342)
+  - J1: USB-C receptacle (GCT USB4105, top-mount SMD)
+
+Through-Hole Components (3 placements):
+  - K1: SRD-05VDC-SL-C relay (SPDT, 5-pin)
+  - D1: 1N4007 diode (DO-41 horizontal)
+  - J2: Phoenix Contact MC 1.5/2 terminal block (3.81mm pitch)
+
+CRITICAL NOTES:
+  - U1 (ESP32): Ensure antenna end extends to board edge. NO copper
+    under antenna area on either layer. Keep GND pad well-soldered.
+  - U3 (CP2102N): QFN exposed pad must be soldered to GND.
+  - D1 (1N4007): Cathode (banded end) toward +5V rail (K1 coil+ side).
+  - D2 (green LED): Verify anode orientation per silkscreen.
+  - D3 (red LED): Verify anode orientation per silkscreen.
+  - K1 (relay): Verify coil polarity markings.
+
+5. ELECTRICAL SUMMARY
+--------------------------------------------------------------------------------
+Input Power:        USB-C, 5V (from USB host or charger)
+Current Draw:       <100mA idle, <170mA with relay active
+Regulated Rail:     3.3V via AMS1117 LDO
+Relay:              SPDT, 10A/250VAC contact rating, 5V coil
+WiFi:               2.4 GHz 802.11 b/g/n (ESP32 on-board antenna)
+BLE:                Bluetooth 4.2 / BLE
+USB Interface:      USB 2.0 Full Speed via CP2102N (serial/programming)
+
+6. NET CLASSES
+--------------------------------------------------------------------------------
+Power (GND, +5V, +3V3, VBUS):
+  Trace width:  0.5mm (20 mil)
+  Clearance:    0.3mm
+  Via:          0.8mm pad / 0.4mm drill
+
+Signal (all others):
+  Trace width:  0.25mm (10 mil)
+  Clearance:    0.2mm
+  Via:          0.6mm pad / 0.3mm drill
+
+7. SPECIAL ZONES
+--------------------------------------------------------------------------------
+Bottom Layer:   Solid GND pour (entire board, 0.5mm inset from edge)
+                Thermal relief: 0.3mm gap, 0.5mm spoke width
+                Via stitching: 14 GND vias at 10mm grid
+
+Keepout:        (49,8) to (59.5,32) on BOTH layers
+                No copper, no vias, no traces
+                This is the ESP32 antenna region
+
+8. TEST POINTS (recommended)
+--------------------------------------------------------------------------------
+  TP1: +5V    (near FB1 output)
+  TP2: +3V3   (near U2 output)
+  TP3: GND    (near board center)
+  TP4: TX     (ESP32 UART TX)
+  TP5: RX     (ESP32 UART RX)
+
+9. FILES INCLUDED
+--------------------------------------------------------------------------------
+  ESP32_Simple_IoT.kicad_pro     KiCad 6+ project file
+  ESP32_Simple_IoT.kicad_sch     Schematic (fully wired)
+  ESP32_Simple_IoT.kicad_pcb     PCB layout (placed, zoned, unrouted)
+  ESP32_Simple_IoT_BOM.csv       Bill of Materials (JLCPCB LCSC format)
+  ESP32_Simple_IoT_CPL.csv       Component Placement List
+  FABRICATION_SPEC.txt           This file
+  README.md                      Design notes and test procedures
+  firmware/test_firmware.ino     Arduino test sketch
+  firmware/platformio.ini        PlatformIO configuration
+
+10. COMPONENT COUNT
+--------------------------------------------------------------------------------
+  Total unique parts:    17
+  Total placements:      24 (including mounting holes)
+  SMT placements:        19
+  Through-hole:          3
+  Mounting holes:        4 (no component, M2.5)
+
+================================================================================
+                              END OF SPECIFICATION
+================================================================================

@@ -1,0 +1,24 @@
+Designator,Mid X,Mid Y,Layer,Rotation
+J1,4,20,Top,0
+FB1,12,12,Top,0
+U2,20,12,Top,0
+C1,15,8,Top,0
+C2,25,8,Top,0
+C3,28,8,Top,0
+U3,12,25,Top,0
+U1,40,20,Top,0
+C5,32,12,Top,0
+R1,28,18,Top,90
+C4,28,22,Top,90
+R2,28,28,Top,90
+SW1,25,33,Top,0
+SW2,32,33,Top,0
+R3,8,35,Top,0
+Q1,4,35,Top,0
+K1,15,35,Top,0
+D1,10,30,Top,0
+J2,56,35,Top,90
+D2,35,5,Top,0
+R4,40,5,Top,0
+D3,45,5,Top,0
+R5,50,5,Top,0

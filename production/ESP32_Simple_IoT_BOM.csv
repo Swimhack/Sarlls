@@ -1,0 +1,17 @@
+Comment,Designator,Footprint,LCSC Part Number
+ESP32-WROOM-32,U1,RF_Module:ESP32-WROOM-32,C82899
+AMS1117-3.3,U2,Package_TO_SOT_SMD:SOT-223-3_TabPin2,C6186
+CP2102N-A02-GQFN28,U3,Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm,C6568
+BC817,Q1,Package_TO_SOT_SMD:SOT-23,C8664
+SRD-05VDC-SL-C,K1,Relay_THT:Relay_SPDT_SANYOU_SRD_Series_Form_C,C35449
+1N4007,D1,Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal,C727110
+LED Green,D2,LED_SMD:LED_0805_2012Metric,C2286
+LED Red,D3,LED_SMD:LED_0805_2012Metric,C2286
+10uF,"C1,C2",Capacitor_SMD:C_0805_2012Metric,C15850
+100nF,"C3,C4,C5",Capacitor_SMD:C_0805_2012Metric,C49678
+10K,"R1,R2",Resistor_SMD:R_0805_2012Metric,C17414
+1K,"R3,R4,R5",Resistor_SMD:R_0805_2012Metric,C17513
+Ferrite Bead,FB1,Inductor_SMD:L_0805_2012Metric,C1015
+Tactile Switch,"SW1,SW2",Button_Switch_SMD:SW_SPST_TL3342,C127509
+USB_C_Receptacle,J1,Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal,C165948
+Terminal Block 2-pos,J2,Connector_Phoenix_MC:PhoenixContact_MC_1.5_2-G-3.81_1x02_P3.81mm_Horizontal,C8269

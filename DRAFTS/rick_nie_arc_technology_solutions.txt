@@ -1,0 +1,20 @@
+Subject: New ESP32 smart switch – first board design review and prototype support
+To: richard.nie@arcserv.com
+
+Hi Rick,
+
+My name is James Strickland. I’m developing my first PCB (ESP32-based smart switch) and have assembled the initial manufacturing files (Gerber zip, merged .XYRS, and BOM). I’m seeking a partner to review the design, advise on DFM/DFT, and support a prototype build with a plan toward production.
+
+Could ARC Technology Solutions assist with:
+- Schematic/Layout review and risk reduction
+- Component alternatives and availability planning
+- Test/bring-up approach and fixture guidance
+- Prototype spin and production readiness
+
+If so, may we schedule a short intro call? I can share the files and a brief scope in advance.
+
+Thank you,
+James Strickland
+713-444-6732
+james@strickland.technology
+

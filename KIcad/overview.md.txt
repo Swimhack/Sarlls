@@ -1,0 +1,13 @@
+
+https://www.flux.ai/swimhack/opposite-black-robot-vacuum?editor=pcb_2d
+
+
+
+
+a switch to connect/ disconnect a 12 V car battery using an IOT signal
+
+
+option: Discrete PFET (or NFET + driver)
+
+
+

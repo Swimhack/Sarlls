@@ -1,0 +1,19 @@
+Material: FR-4, Tg >= 170°C
+Board thickness: 1.6 mm
+Layers: 4 (L1 Top, L2 GND plane, L3 PWR plane, L4 Bottom)
+Copper weight: L1/L4 1 oz; L2/L3 0.5 oz (unless otherwise specified)
+Soldermask: Green (or specify)
+Silkscreen: White
+Surface finish: ENIG (preferred) or OSP
+Via: 0.30 mm drill, 0.60 mm pad; tent outer layer vias unless used as test points
+Impedance: 50 Ω single-ended, 100 Ω differential (fabricator to tune dielectric)
+Soldermask clearance: per fab default or 2–4 mil
+Minimum trace/space: 6/6 mil (target); 4/4 mil acceptable if capability allows
+Annular ring: >= 4 mil
+Plated slots: allowed; provide in mechanical layer and PTH drill
+NPTH holes: separate drill file
+Panelization: Fabricator to panelize; include fiducials per panel; rail width per fab
+Cleanliness: No copper under ESP32 antenna keepout on all layers
+Testing: Electrical test requested (flying probe or netlist against Gerber)
+Standards: IPC-6012 Class 2 (or Class 3 if required)
+Notes: Control impedance nets are identified in design; maintain GND plane continuity

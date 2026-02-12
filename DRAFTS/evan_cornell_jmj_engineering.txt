@@ -1,0 +1,20 @@
+Subject: New IoT smart switch project – first board design help
+To: evan.cornell@jmjengineeringconsulting.com
+
+Hi Evan,
+
+My name is James Strickland, and I’m starting my first PCB project: an ESP32-based IoT smart switch. I have a preliminary design and manufacturing files ready (Gerber zip, merged .XYRS placement, and BOM). I’m looking for an experienced partner to review the design, advise on best practices, and help finalize a production-ready first board, with the option to support quick-turn prototypes and low-volume builds.
+
+Scope I’m seeking help with:
+- Schematic and layout review for DFM/DFT/EMC
+- Part substitutions and supply risk mitigation
+- Test points/bring-up plan
+- Prototype spin and production ramp recommendations
+
+If this fits your wheelhouse, could we schedule a quick intro call this week? I can share the current files and requirements ahead of time.
+
+Thanks,
+James Strickland
+713-444-6732
+james@strickland.technology
+

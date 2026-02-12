@@ -1,0 +1,282 @@
+(edif "Sarlls-IOT"
+    (edifVersion 2 0 0)
+    (edifLevel 0)
+    (keywordMap (keywordLevel 0))
+    (status
+        (written
+            (timestamp 2025 10 20 13 01 27.759)
+            (program "Flux" (version "1.0"))
+            (author "Flux")
+        )
+    )
+    (library FluxLibrary
+        (edifLevel 0)
+        (technology (numberDefinition))
+        (cell "Net Portal"
+            (cellType generic)
+            (view schematic
+                (viewType schematic)
+                (interface
+                    (port P1 (direction inout))
+                )
+            )
+        )
+        (cell "ESP32-WROOM-32D"
+            (cellType generic)
+            (view schematic
+                (viewType schematic)
+                (interface
+                    (port IO35 (direction inout))
+                (port CLK (direction inout))
+                (port IO13 (direction inout))
+                (port "3.3V" (direction inout))
+                (port SD1 (direction inout))
+                (port IO15 (direction inout))
+                (port IO5 (direction inout))
+                (port IO17 (direction inout))
+                (port IO27 (direction inout))
+                (port RXD0 (direction inout))
+                (port VN (direction inout))
+                (port SD3 (direction inout))
+                (port TXD0 (direction inout))
+                (port IO12 (direction inout))
+                (port EN (direction inout))
+                (port IO26 (direction inout))
+                (port NC (direction inout))
+                (port IO25 (direction inout))
+                (port AGND (direction inout))
+                (port IO23 (direction inout))
+                (port GND (direction inout))
+                (port IO21 (direction inout))
+                (port GND (direction inout))
+                (port IO33 (direction inout))
+                (port IO14 (direction inout))
+                (port VP (direction inout))
+                (port IO18 (direction inout))
+                (port IO16 (direction inout))
+                (port IO34 (direction inout))
+                (port CMD (direction inout))
+                (port GND (direction inout))
+                (port IO19 (direction inout))
+                (port IO4 (direction inout))
+                (port IO22 (direction inout))
+                (port SD0 (direction inout))
+                (port IO0 (direction inout))
+                (port IO2 (direction inout))
+                (port SD2 (direction inout))
+                (port IO32 (direction inout))
+                )
+            )
+        )
+        (cell "Generic Capacitor"
+            (cellType generic)
+            (view schematic
+                (viewType schematic)
+                (interface
+                    (port P1 (direction inout))
+                (port P2 (direction inout))
+                )
+            )
+        )
+        (cell "SMBJ12A-13-F"
+            (cellType generic)
+            (view schematic
+                (viewType schematic)
+                (interface
+                    (port K (direction inout))
+                (port A (direction inout))
+                )
+            )
+        )
+        (cell LM74800QDRRRQ1
+            (cellType generic)
+            (view schematic
+                (viewType schematic)
+                (interface
+                    (port DGATE (direction inout))
+                (port CAP (direction inout))
+                (port "EN/UVLO" (direction inout))
+                (port HGATE (direction inout))
+                (port OV (direction inout))
+                (port SW (direction inout))
+                (port C (direction inout))
+                (port OUT (direction inout))
+                (port VSNS (direction inout))
+                (port DRR (direction inout))
+                (port A (direction inout))
+                (port GND (direction inout))
+                (port VS (direction inout))
+                )
+            )
+        )
+        (cell TPD3E001DRLR
+            (cellType generic)
+            (view schematic
+                (viewType schematic)
+                (interface
+                    (port "~" (direction inout))
+                (port IO1 (direction inout))
+                (port "~" (direction inout))
+                (port IO3 (direction inout))
+                (port IO2 (direction inout))
+                )
+            )
+        )
+        (cell "1812L200/12DR"
+            (cellType generic)
+            (view schematic
+                (viewType schematic)
+                (interface
+                    (port P1 (direction inout))
+                (port P2 (direction inout))
+                )
+            )
+        )
+        (cell DLP31SN221ML2L
+            (cellType generic)
+            (view schematic
+                (viewType schematic)
+                (interface
+                    (port 1 (direction inout))
+                (port 4 (direction inout))
+                (port 3 (direction inout))
+                (port 2 (direction inout))
+                )
+            )
+        )
+    )
+    
+    (library Main
+            (edifLevel 0)
+            (technology (numberDefinition))
+            (cell "Sarlls-IOT_top"
+                (cellType generic)
+                (view schematic
+                    (viewType schematic)
+                    (interface)
+                    (contents
+                        (instance "D1 A - U3 OUT"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance "U3 VS - L1 3"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance "D1 A - U3 OUT"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance U1
+                (viewRef schematic (cellRef "ESP32-WROOM-32D" (libraryRef FluxLibrary)))
+            )
+                        (instance "U3 VS - L1 3"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance C6
+                (viewRef schematic (cellRef "Generic Capacitor" (libraryRef FluxLibrary)))
+            )
+                        (instance D1
+                (viewRef schematic (cellRef "SMBJ12A-13-F" (libraryRef FluxLibrary)))
+            )
+                        (instance U3
+                (viewRef schematic (cellRef LM74800QDRRRQ1 (libraryRef FluxLibrary)))
+            )
+                        (instance C4
+                (viewRef schematic (cellRef "Generic Capacitor" (libraryRef FluxLibrary)))
+            )
+                        (instance "F1 P2 - D1 K"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance C5
+                (viewRef schematic (cellRef "Generic Capacitor" (libraryRef FluxLibrary)))
+            )
+                        (instance U2
+                (viewRef schematic (cellRef TPD3E001DRLR (libraryRef FluxLibrary)))
+            )
+                        (instance "D1 A - U3 OUT"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance C1
+                (viewRef schematic (cellRef "Generic Capacitor" (libraryRef FluxLibrary)))
+            )
+                        (instance "U1 3.3V - C1 P1"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance C3
+                (viewRef schematic (cellRef "Generic Capacitor" (libraryRef FluxLibrary)))
+            )
+                        (instance "F1 P2 - D1 K"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance "D1 A - U3 OUT"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance "U1 3.3V - C1 P1"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance "U1 3.3V - C1 P1"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance C2
+                (viewRef schematic (cellRef "Generic Capacitor" (libraryRef FluxLibrary)))
+            )
+                        (instance "F1 P2 - D1 K"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance F1
+                (viewRef schematic (cellRef "1812L200/12DR" (libraryRef FluxLibrary)))
+            )
+                        (instance "F1 P2 - D1 K"
+                (viewRef schematic (cellRef "Net Portal" (libraryRef FluxLibrary)))
+            )
+                        (instance L1
+                (viewRef schematic (cellRef DLP31SN221ML2L (libraryRef FluxLibrary)))
+            )
+                        (Net F1_OUT
+                            (joined (portRef 1 (instanceRef L1))
+                            (portRef P1 (instanceRef "F1 P2 - D1 K"))
+                            (portRef A (instanceRef U3))
+                            (portRef P1 (instanceRef "F1 P2 - D1 K"))
+                            (portRef K (instanceRef D1))
+                            (portRef 2 (instanceRef L1))
+                            (portRef P2 (instanceRef F1))
+                            (portRef P1 (instanceRef "F1 P2 - D1 K"))
+                            (portRef P1 (instanceRef "F1 P2 - D1 K")))
+                        )
+                        (Net GND
+                            (joined (portRef P2 (instanceRef C4))
+                            (portRef P2 (instanceRef C1))
+                            (portRef P2 (instanceRef C3))
+                            (portRef P2 (instanceRef C2)))
+                        )
+                        (Net PROTECTED_12V_BUS
+                            (joined (portRef P1 (instanceRef "D1 A - U3 OUT"))
+                            (portRef VS (instanceRef U3))
+                            (portRef P1 (instanceRef "D1 A - U3 OUT"))
+                            (portRef OUT (instanceRef U3))
+                            (portRef P1 (instanceRef "D1 A - U3 OUT"))
+                            (portRef 3 (instanceRef L1))
+                            (portRef P1 (instanceRef C5))
+                            (portRef P1 (instanceRef C2))
+                            (portRef P1 (instanceRef C3))
+                            (portRef P1 (instanceRef C4))
+                            (portRef 4 (instanceRef L1))
+                            (portRef P1 (instanceRef "U3 VS - L1 3"))
+                            (portRef A (instanceRef D1))
+                            (portRef P1 (instanceRef "U3 VS - L1 3"))
+                            (portRef P1 (instanceRef "D1 A - U3 OUT")))
+                        )
+                        (Net "3.3V"
+                            (joined (portRef "3.3V" (instanceRef U1))
+                            (portRef P1 (instanceRef C6))
+                            (portRef P1 (instanceRef "U1 3.3V - C1 P1"))
+                            (portRef P1 (instanceRef C1))
+                            (portRef P1 (instanceRef "U1 3.3V - C1 P1"))
+                            (portRef P1 (instanceRef "U1 3.3V - C1 P1")))
+                        )
+                    )
+                )
+            )
+        )
+        (design "Sarlls-IOT"
+            (cellRef "Sarlls-IOT_top" (libraryRef Main))
+        )
+)

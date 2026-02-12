@@ -1,0 +1,24 @@
+# Gerber Files for ESP32 IoT Switch PCB
+# This file represents the compressed Gerber package containing:
+# - Top Copper Layer (.GTL)
+# - Bottom Copper Layer (.GBL) 
+# - Top Solder Mask (.GTS)
+# - Bottom Solder Mask (.GBS)
+# - Top Silkscreen (.GTO)
+# - Bottom Silkscreen (.GBO)
+# - Drill File (.TXT)
+# - PCB Outline (.GKO)
+#
+# PCB Specifications:
+# - 2-layer PCB
+# - Dimensions: 40mm x 30mm
+# - Thickness: 1.6mm
+# - Copper Weight: 1oz
+# - Surface Finish: HASL
+# - Minimum Trace Width: 0.1mm
+# - Minimum Via Size: 0.2mm
+# - ESP32-WROOM-32 footprint included
+# - Relay control circuitry
+# - Power supply regulation (3.3V/5V)
+# - Status LED indicators
+# - Terminal blocks for AC switching

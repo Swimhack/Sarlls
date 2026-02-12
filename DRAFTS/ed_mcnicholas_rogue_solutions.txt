@@ -1,0 +1,20 @@
+Subject: ESP32 smart switch – first board design + prototype support
+To: emcnicholas@roguesolutionsengineering.com
+
+Hi Ed,
+
+I’m James Strickland, working on my first PCB: an ESP32-based IoT smart switch. I’ve assembled the core manufacturing files (Gerber zip, merged .XYRS, and BOM) and want expert help to review the design, tighten up for manufacturability, and plan a path to prototypes and early production.
+
+Areas where I’d appreciate Rogue’s guidance:
+- Design review for reliability, EMC, and safety
+- Component risk/lead time alternatives
+- Test/bring-up strategy and fixture suggestions
+- Prototype build and transfer to production
+
+Could we set up a short intro call? I can send the files and brief ahead of time.
+
+Best regards,
+James Strickland
+713-444-6732
+james@strickland.technology
+

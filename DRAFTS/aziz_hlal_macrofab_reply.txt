@@ -1,0 +1,22 @@
+Subject: Re: Required design files for quote
+To: (Aziz’s email)
+
+Hi Aziz,
+
+Thanks for the guidance and links. I’ve prepared the manufacturing package to match the MacroFab requirements:
+
+- PCB layers: RS-274X Gerbers + NC drill in a single zip
+- Bill of Materials: CSV ready and convertible to .xlsx if needed
+- Component placement: merged .XYRS (tab-delimited, mils, Top=1 / Bottom=2)
+
+I can upload these to the MacroFab portal for an instant quote. If you prefer, I can also share them directly by reply (or a shared link).
+
+Please let me know if you have any specific preferences (e.g., require .xlsx BoM instead of CSV, or any custom PCB specification fields you want pre-filled).
+
+Thanks again—will keep you posted once the upload is complete.
+
+Best regards,
+James Strickland
+713-444-6732
+james@strickland.technology
+

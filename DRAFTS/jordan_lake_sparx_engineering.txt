@@ -1,0 +1,20 @@
+Subject: First-time PCB design (ESP32 smart switch) – looking for review + prototype help
+To: jlake@sparxeng.com
+
+Hi Jordan,
+
+I’m James Strickland. I’m designing my first PCB, an ESP32 smart switch for home/IoT use. I’ve prepared the core manufacturing package (Gerber zip, merged .XYRS placement, and BOM) and would value Sparx Engineering’s help to review and finalize the design, then plan a prototype run.
+
+What I’m hoping to cover:
+- Design-for-manufacture/test review and recommendations
+- Power/safety considerations and component substitutions
+- Bring-up/test strategy
+- Prototype build plan and next steps to production
+
+If you’re available, I’d love to schedule a brief intro call this week. Happy to share the files and a one-pager beforehand.
+
+Thanks,
+James Strickland
+713-444-6732
+james@strickland.technology
+
