@@ -1,0 +1,165 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-02-12T11:45:50-0600",
+    "kicad_version": "9.0.7",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+            "violations": [
+                {
+                    "description": "Wires not connected to anything",
+                    "items": [
+                        {
+                            "description": "Horizontal Wire, length 0.1270 mm",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 0.9779
+                            },
+                            "uuid": "33333333-3333-3333-3333-333333333301"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "wire_dangling"
+                },
+                {
+                    "description": "Wires not connected to anything",
+                    "items": [
+                        {
+                            "description": "Horizontal Wire, length 0.1270 mm",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 0.9906
+                            },
+                            "uuid": "33333333-3333-3333-3333-333333333303"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "wire_dangling"
+                },
+                {
+                    "description": "Wires not connected to anything",
+                    "items": [
+                        {
+                            "description": "Horizontal Wire, length 0.1270 mm",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.0414
+                            },
+                            "uuid": "33333333-3333-3333-3333-333333333304"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "wire_dangling"
+                },
+                {
+                    "description": "Wires not connected to anything",
+                    "items": [
+                        {
+                            "description": "Horizontal Wire, length 0.1270 mm",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.0541
+                            },
+                            "uuid": "33333333-3333-3333-3333-333333333302"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "wire_dangling"
+                },
+                {
+                    "description": "Unconnected wire endpoint",
+                    "items": [
+                        {
+                            "description": "Horizontal Wire, length 0.1270 mm",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 0.9906
+                            },
+                            "uuid": "33333333-3333-3333-3333-333333333303"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "unconnected_wire_endpoint"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R1 [R]",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.016
+                            },
+                            "uuid": "11111111-1111-1111-1111-111111111111"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Unconnected wire endpoint",
+                    "items": [
+                        {
+                            "description": "Horizontal Wire, length 0.1270 mm",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.0414
+                            },
+                            "uuid": "33333333-3333-3333-3333-333333333304"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "unconnected_wire_endpoint"
+                },
+                {
+                    "description": "Unconnected wire endpoint",
+                    "items": [
+                        {
+                            "description": "Horizontal Wire, length 0.1270 mm",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 0.9906
+                            },
+                            "uuid": "33333333-3333-3333-3333-333333333303"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "unconnected_wire_endpoint"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R2 [R]",
+                            "pos": {
+                                "x": 1.143,
+                                "y": 1.016
+                            },
+                            "uuid": "22222222-2222-2222-2222-222222222222"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Unconnected wire endpoint",
+                    "items": [
+                        {
+                            "description": "Horizontal Wire, length 0.1270 mm",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.0414
+                            },
+                            "uuid": "33333333-3333-3333-3333-333333333304"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "unconnected_wire_endpoint"
+                }
+            ]
+        }
+    ],
+    "source": "test_wire.kicad_sch"
+}
