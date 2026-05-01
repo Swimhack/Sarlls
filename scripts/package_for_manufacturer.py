@@ -53,6 +53,10 @@ EXPECTED_PARTS = {
     "C127509": "Tactile switch TL3342",
     "C165948": "USB-C receptacle GCT",
     "C8269":   "Terminal block Phoenix MC",
+    "C25905":  "5.1K 0402 resistor (CC pull-down)",
+    "C45783":  "22uF 0805 cap (AMS1117 bulk)",
+    "C1525":   "100nF 0402 cap",
+    "C52923":  "1uF 0402 cap",
 }
 
 
@@ -186,10 +190,10 @@ def validate_pcb(filepath: Path) -> list[str]:
     try:
         content = filepath.read_text(encoding="utf-8")
 
-        footprint_count = content.count("(footprint ")
-        zone_count = content.count("(zone ")
-        via_count = content.count("(via ")
-        segment_count = content.count("(segment ")
+        footprint_count = content.count("(footprint")
+        zone_count = content.count("(zone")
+        via_count = content.count("(via")
+        segment_count = content.count("(segment")
         net_count = content.count("(net ")
 
         if footprint_count < 15:
@@ -244,8 +248,7 @@ Contents:
 
         manifest += """
 IMPORTANT NOTES:
-  - PCB trace routing is NOT complete. The KiCad source files are
-    provided for your engineering team to complete routing.
+  - PCB is fully routed with 2-layer design (F.Cu signals, B.Cu GND plane).
   - All component placements, zones, keepouts, and net definitions
     are finalized.
   - See FABRICATION_SPEC.txt for complete board specifications.

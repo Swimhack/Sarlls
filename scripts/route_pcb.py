@@ -16,6 +16,7 @@ Must be run with KiCad's Python:
 
 import pcbnew
 import os
+import csv
 
 # ============================================================
 # CONSTANTS
@@ -23,11 +24,69 @@ import os
 
 NM = 1_000_000  # 1mm in nanometers
 FP_BASE = r'C:\Users\james\AppData\Local\Programs\KiCad\9.0\share\kicad\footprints'
-PCB_OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                       'production', 'ESP32_Simple_IoT.kicad_pcb')
+PROD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'production')
+PCB_OUT = os.path.join(PROD_DIR, 'ESP32_Simple_IoT.kicad_pcb')
+BOM_OUT = os.path.join(PROD_DIR, 'ESP32_Simple_IoT_BOM.csv')
+CPL_OUT = os.path.join(PROD_DIR, 'ESP32_Simple_IoT_CPL.csv')
 
 BOARD_W = 80.0
 BOARD_H = 60.0
+
+# LCSC Part Numbers for BOM
+LCSC_PARTS = {
+    'U1': 'C82899',   # ESP32-WROOM-32
+    'U2': 'C6186',    # AMS1117-3.3
+    'U3': 'C6568',    # CP2102N-A02-GQFN28
+    'Q1': 'C2137',    # BC817
+    'K1': 'C35449',   # SRD-05VDC-SL-C relay
+    'D1': 'C106903',  # 1N4007 diode
+    'D2': 'C375456',  # LED Green 0805
+    'D3': 'C84256',   # LED Red 0805
+    'C1': 'C15850',   # 10uF 0805 cap
+    'C2': 'C15850',   # 10uF 0805 cap
+    'C3': 'C49678',   # 100nF 0805 cap
+    'C4': 'C49678',   # 100nF 0805 cap
+    'C5': 'C49678',   # 100nF 0805 cap
+    'R1': 'C17414',   # 10K 0805 resistor
+    'R2': 'C17414',   # 10K 0805 resistor
+    'R3': 'C17513',   # 1K 0805 resistor
+    'R4': 'C17513',   # 1K 0805 resistor
+    'R5': 'C17513',   # 1K 0805 resistor
+    'FB1': 'C127284', # Ferrite bead 0805
+    'SW1': 'C127509', # Tactile switch TL3342
+    'SW2': 'C127509', # Tactile switch TL3342
+    'J1': 'C165948',  # USB-C receptacle GCT
+    'J2': 'C8269',    # Terminal block Phoenix MC
+    'R6': 'C25905',   # 5.1K 0402 resistor (CC pull-down)
+    'R7': 'C25905',   # 5.1K 0402 resistor (CC pull-down)
+    'C6': 'C45783',   # 22uF 0805 cap (AMS1117 bulk)
+    'C7': 'C1525',    # 100nF 0402 cap
+    'C8': 'C52923',   # 1uF 0402 cap
+}
+
+# Values for BOM
+COMP_VALUES = {
+    'U1': 'ESP32-WROOM-32',
+    'U2': 'AMS1117-3.3',
+    'U3': 'CP2102N-A02-GQFN28',
+    'Q1': 'BC817',
+    'K1': 'SRD-05VDC-SL-C',
+    'D1': '1N4007',
+    'D2': 'LED Green',
+    'D3': 'LED Red',
+    'C1': '10uF', 'C2': '10uF',
+    'C3': '100nF', 'C4': '100nF', 'C5': '100nF',
+    'R1': '10K', 'R2': '10K',
+    'R3': '1K', 'R4': '1K', 'R5': '1K',
+    'FB1': 'Ferrite Bead',
+    'SW1': 'Tactile Switch', 'SW2': 'Tactile Switch',
+    'J1': 'USB_C_Receptacle',
+    'J2': 'Terminal Block 2-pos',
+    'R6': '5.1K', 'R7': '5.1K',
+    'C6': '22uF',
+    'C7': '100nF',
+    'C8': '1uF',
+}
 
 F_Cu = pcbnew.F_Cu
 B_Cu = pcbnew.B_Cu
@@ -35,7 +94,7 @@ Edge_Cuts = pcbnew.Edge_Cuts
 
 # Trace widths
 PWR_W = 0.5   # Power traces
-SIG_W = 0.25  # Signal traces
+SIG_W = 0.20  # Signal traces (Reduced from 0.25 for better pad clearance)
 
 # Via sizes
 VIA_SIZE = 0.6
@@ -67,6 +126,8 @@ NET_NAMES = [
     'RELAY_BASE',  # 16
     'RELAY_COM',   # 17
     'RELAY_NO',    # 18
+    'CC1',         # 19
+    'CC2',         # 20
 ]
 
 # ============================================================
@@ -131,6 +192,20 @@ COMPONENTS = [
     ('R4',  'Resistor_SMD',       'R_0805_2012Metric',            13, 4, 0),
     ('D3',  'LED_SMD',            'LED_0805_2012Metric',          6, 16, 0),
     ('R5',  'Resistor_SMD',       'R_0805_2012Metric',            10, 16, 0),
+
+    # USB-C CC pull-down resistors — rotated 90°, stacked vertically at x=5
+    # Between VBUS F.Cu (x=3.6) and +3V3 B.Cu (x=5) / +5V B.Cu (x=8)
+    # GND vias route right to x=6.25 (safe B.Cu corridor)
+    ('R6',  'Resistor_SMD',       'R_0402_1005Metric',            5, 21.5, 90),
+    ('R7',  'Resistor_SMD',       'R_0402_1005Metric',            5, 24, 90),
+
+    # AMS1117 output bulk capacitor (above C2, on +3V3 rail)
+    # y=1.3: clears +3V3 F.Cu at y=2.75 (gap 0.775mm) and board edge at y=0 (gap 0.875mm)
+    ('C6',  'Capacitor_SMD',      'C_0805_2012Metric',            33, 1.3, 0),
+
+    # CP2102N VREGIN decoupling (right of U3, clear area)
+    ('C7',  'Capacitor_SMD',      'C_0402_1005Metric',            18, 48, 0),
+    ('C8',  'Capacitor_SMD',      'C_0402_1005Metric',            18, 49.5, 0),
 ]
 
 MOUNTING_HOLES = [
@@ -147,8 +222,10 @@ MOUNTING_HOLES = [
 PAD_NETS = {
     # USB Connector J1
     ('J1', 'A1'): 'GND', ('J1', 'A4'): 'VBUS',
-    # A5/B5 are CC pins — left unrouted (float OK for power-only USB-C)
+    # J1:A5/B5 = CC pins, routed via R6/R7 pull-downs to GND
+    ('J1', 'A5'): 'CC1', ('J1', 'B5'): 'CC2',
     ('J1', 'A6'): 'USB_D+', ('J1', 'A7'): 'USB_D-',
+    # B6/B7 left unassigned — B-side data requires 4-layer board for clean routing
     ('J1', 'A8'): 'GND',   # SBU1 — assign GND for routing
     ('J1', 'S1'): 'GND', ('J1', 'B1'): 'GND',
     ('J1', 'B4'): 'VBUS',  # B4 shares position with A9
@@ -210,6 +287,17 @@ PAD_NETS = {
     ('R4', '1'): 'LED_PWR', ('R4', '2'): '+3V3',
     ('D3', '1'): 'GND', ('D3', '2'): 'LED_RELAY',
     ('R5', '1'): 'ESP_IO5', ('R5', '2'): 'LED_RELAY',
+
+    # CC pull-down resistors (USB-C power sink detection)
+    ('R6', '1'): 'CC1', ('R6', '2'): 'GND',
+    ('R7', '1'): 'CC2', ('R7', '2'): 'GND',
+
+    # AMS1117 bulk output cap (22µF for regulator stability)
+    ('C6', '1'): '+3V3', ('C6', '2'): 'GND',
+
+    # CP2102N VREGIN decoupling
+    ('C7', '1'): '+5V', ('C7', '2'): 'GND',
+    ('C8', '1'): '+5V', ('C8', '2'): 'GND',
 }
 
 # ============================================================
@@ -269,27 +357,59 @@ def add_via(board, net, x, y, size=VIA_SIZE, drill=VIA_DRILL):
     via.SetNet(net)
     board.Add(via)
 
-def route_polyline(board, net, layer, width, points):
-    """Route a series of connected track segments."""
-    for i in range(len(points) - 1):
-        x1, y1 = points[i]
-        x2, y2 = points[i + 1]
+def route_polyline(board, net, layer, width, points, chamfer=0.5):
+    """Route a series of connected track segments with optional 45-degree chamfering."""
+    if not points or len(points) < 2:
+        return
+
+    # Create a new list of points with chamfered corners
+    new_points = [points[0]]
+    
+    for i in range(1, len(points) - 1):
+        p_prev = points[i-1]
+        p_curr = points[i]
+        p_next = points[i+1]
+        
+        # Vector from curr to prev and curr to next
+        v1 = (p_prev[0] - p_curr[0], p_prev[1] - p_curr[1])
+        v2 = (p_next[0] - p_curr[0], p_next[1] - p_curr[1])
+        
+        # Lengths
+        l1 = (v1[0]**2 + v1[1]**2)**0.5
+        l2 = (v2[0]**2 + v2[1]**2)**0.5
+        
+        # If segments are long enough and it's a 90-degree turn (or any turn)
+        # apply chamfer
+        actual_chamfer = min(chamfer, l1 * 0.4, l2 * 0.4)
+        
+        if actual_chamfer > 0.1:
+            # Points offset from p_curr towards p_prev and p_next
+            p1 = (p_curr[0] + v1[0]/l1 * actual_chamfer, p_curr[1] + v1[1]/l1 * actual_chamfer)
+            p2 = (p_curr[0] + v2[0]/l2 * actual_chamfer, p_curr[1] + v2[1]/l2 * actual_chamfer)
+            new_points.append(p1)
+            new_points.append(p2)
+        else:
+            new_points.append(p_curr)
+            
+    new_points.append(points[-1])
+    
+    for i in range(len(new_points) - 1):
+        x1, y1 = new_points[i]
+        x2, y2 = new_points[i + 1]
         add_track(board, net, layer, width, x1, y1, x2, y2)
 
-def route_manhattan(board, net, layer, width, p1, p2, horiz_first=True):
-    """Route an L-shaped Manhattan path between two points."""
+def route_manhattan(board, net, layer, width, p1, p2, horiz_first=True, chamfer=0.5):
+    """Route an L-shaped Manhattan path with 45-degree chamfered bend."""
     x1, y1 = p1
     x2, y2 = p2
     if abs(x1 - x2) < 0.01 and abs(y1 - y2) < 0.01:
         return
     if abs(x1 - x2) < 0.01 or abs(y1 - y2) < 0.01:
         add_track(board, net, layer, width, x1, y1, x2, y2)
-    elif horiz_first:
-        add_track(board, net, layer, width, x1, y1, x2, y1)
-        add_track(board, net, layer, width, x2, y1, x2, y2)
     else:
-        add_track(board, net, layer, width, x1, y1, x1, y2)
-        add_track(board, net, layer, width, x1, y2, x2, y2)
+        # Define the three points of the L-shape
+        mid = (x2, y1) if horiz_first else (x1, y2)
+        route_polyline(board, net, layer, width, [p1, mid, p2], chamfer=chamfer)
 
 def route_via_bridge(board, net, layer_start, layer_end, width, p1, p2,
                      via_offset_start=1.5, via_offset_end=1.5, horiz_first=True,
@@ -374,6 +494,14 @@ def route_all(board, net_map):
     pa = p('U2', '2')
     pb = p('C2', '1')
     route_manhattan(board, net('+3V3'), F_Cu, PWR_W, pa, pb, horiz_first=True)
+    # +3V3 -> C6:1 (AMS1117 bulk output cap, 22µF for regulator stability)
+    # C6 at (33, 1.3), above C2 at (33, 4) — vertical from C2:1
+    pc6_1 = p('C6', '1')
+    pc6_2 = p('C6', '2')
+    route_manhattan(board, net('+3V3'), F_Cu, PWR_W, pb, pc6_1, horiz_first=False)
+    # C6:2 GND via — short drop south, via clears +3V3@y=2.75 (edge at y=2.2 vs trace at 2.5)
+    add_track(board, net('GND'), F_Cu, SIG_W, pc6_2[0], pc6_2[1], pc6_2[0], pc6_2[1] + 0.5)
+    add_via(board, net('GND'), pc6_2[0], pc6_2[1] + 0.5)
     # C2:1 -> C3:1
     pc = p('C3', '1')
     route_manhattan(board, net('+3V3'), F_Cu, PWR_W, pb, pc, horiz_first=False)
@@ -412,21 +540,35 @@ def route_all(board, net_map):
     add_track(board, net('+3V3'), F_Cu, PWR_W, pc[0], pc[1], via_3v3_start[0], via_3v3_start[1])
     add_via(board, net('+3V3'), via_3v3_start[0], via_3v3_start[1], VIA_PWR_SIZE, VIA_PWR_DRILL)
     # B.Cu to close to U3:6, then short F.Cu stub (avoids long F.Cu near USB_D- pad)
+    # Split B.Cu vertical at x=5 with F.Cu hop y=42-44.5 to create gap for GND zone flow.
+    # Without this gap, the +3V3 L-shape (x=5 vertical + y=45 horizontal) encloses
+    # a B.Cu zone island between x=5-13, y=16-49.
     via_3v3_end = (10, 45)  # Far enough from USB_D- via at (11.55, 44.5)
     route_polyline(board, net('+3V3'), B_Cu, PWR_W, [
         via_3v3_start,
         (5, via_3v3_start[1]),      # Left to x=5
-        (5, via_3v3_end[1]),        # Down to y=45
-        via_3v3_end,                # Right to x=10
+        (5, 42),                     # Down to y=42 (gap start)
+    ])
+    add_via(board, net('+3V3'), 5, 42, VIA_PWR_SIZE, VIA_PWR_DRILL)
+    add_track(board, net('+3V3'), F_Cu, PWR_W, 5, 42, 5, 44.5)  # F.Cu hop over gap
+    add_via(board, net('+3V3'), 5, 44.5, VIA_PWR_SIZE, VIA_PWR_DRILL)
+    route_polyline(board, net('+3V3'), B_Cu, PWR_W, [
+        (5, 44.5),                   # Resume B.Cu after gap
+        (5, via_3v3_end[1]),         # Down to y=45
+        via_3v3_end,                 # Right to x=10
     ])
     add_via(board, net('+3V3'), via_3v3_end[0], via_3v3_end[1], VIA_PWR_SIZE, VIA_PWR_DRILL)
-    # F.Cu: via (10,45) -> south to y=46 -> across to x=13.55 -> up through U3:7/U3:6
-    # y=46 clears USB_D- via at (11.55,45) and stays below +5V F.Cu at y=47
+    # F.Cu: via (10,45) -> south to y=46.5 -> across to x=13.55 -> up through U3:7/U3:6
+    # y=46.5 adds clearance from USB_D- at y=44.5 and stays below +5V F.Cu at y=47.3
     pu3_7 = p('U3', '7')
     route_polyline(board, net('+3V3'), F_Cu, PWR_W, [
         via_3v3_end,                  # (10, 45)
-        (via_3v3_end[0], 46),         # (10, 46) south past USB_D- via
-        (pu3_vdd[0], 46),            # (13.55, 46) across
+        (via_3v3_end[0], 46.5),       # (10, 46.5) south past USB_D- via
+        (pu3_vdd[0], 46.5),          # (13.55, 46.5) across
+    ])
+    # Use SIG_W within QFN pad area (0.5mm pitch) to maintain clearance from USB_D- pad
+    route_polyline(board, net('+3V3'), F_Cu, SIG_W, [
+        (pu3_vdd[0], 46.5),          # (13.55, 46.5)
         (pu3_7[0], pu3_7[1]),         # (13.55, 45.5) U3:7 pad
         (pu3_vdd[0], pu3_vdd[1]),     # (13.55, 45) U3:6 pad
     ])
@@ -455,15 +597,38 @@ def route_all(board, net_map):
         via_5v_u3_end,               # Left to x=10
     ])
     add_via(board, net('+5V'), via_5v_u3_end[0], via_5v_u3_end[1], VIA_PWR_SIZE, VIA_PWR_DRILL)
-    # F.Cu: (10,49) -> (11,49) -> (11,47) -> (14.5,47) -> U3:8 (14.5,46.45)
-    # L-shape avoids ESP_IO4 F.Cu at y=48 (x=13.09-15) and GND stitch via at (12,48)
+    # F.Cu: (10,49) -> (11,49) -> (11,47.3) -> (14.5,47.3) at PWR_W
+    # Then (14.5,47.3) -> U3:8 at SIG_W (narrower to clear U3:9 at x=15)
+    # y=47.3 adds clearance from U3 bottom pads, stays clear of ESP_IO4 at y=48
     route_polyline(board, net('+5V'), F_Cu, PWR_W, [
         via_5v_u3_end,              # (10, 49)
         (11, 49),                   # Right to x=11
-        (11, 47),                   # Up to y=47 (below ESP_IO4 at y=48)
-        (pu3_reg[0], 47),           # Right to U3:8 x at y=47
+        (11, 47.3),                 # Up to y=47.3
+        (pu3_reg[0], 47.3),         # Right to U3:8 x at y=47.3
+    ])
+    # Final approach at SIG_W to maintain clearance from U3:9 pad (0.5mm pitch)
+    route_polyline(board, net('+5V'), F_Cu, SIG_W, [
+        (pu3_reg[0], 47.3),         # (14.5, 47.3)
         (pu3_reg[0], pu3_reg[1]),   # Up to U3:8 (14.5, 46.45)
     ])
+
+    # CP2102N VREGIN decoupling (C7=100nF, C8=1µF near pin 8)
+    # C7 at (18, 48), C8 at (18, 49.5) — right of U3, clear area
+    # Route +5V from the existing route at (pu3_reg[0], 47.3) = (~14.5, 47.3)
+    pc7_1 = p('C7', '1')
+    pc7_2 = p('C7', '2')
+    pc8_1 = p('C8', '1')
+    pc8_2 = p('C8', '2')
+    # C7:1 (+5V) from +5V F.Cu at (pu3_reg[0], 47.3) east to C7
+    route_manhattan(board, net('+5V'), F_Cu, SIG_W, (pu3_reg[0], 47.3), pc7_1, horiz_first=True)
+    # C7:2 GND via — short drop south
+    add_track(board, net('GND'), F_Cu, SIG_W, pc7_2[0], pc7_2[1], pc7_2[0], pc7_2[1] + 0.8)
+    add_via(board, net('GND'), pc7_2[0], pc7_2[1] + 0.8)
+    # C8: chain from C7 +5V side
+    add_track(board, net('+5V'), F_Cu, SIG_W, pc7_1[0], pc7_1[1], pc8_1[0], pc8_1[1])
+    # C8:2 GND — route NORTH to C7 GND via (same x=18.48, same net)
+    # Avoids RELAY_COIL B.Cu at y=50 and K1:1 PTH at (22,50)
+    add_track(board, net('GND'), F_Cu, SIG_W, pc8_2[0], pc8_2[1], pc7_2[0], pc7_2[1] + 0.8)
 
     # +5V -> relay area (K1:2 coil+ and D1:1 cathode) on B.Cu
     pk1_coilp = p('K1', '2')
@@ -505,10 +670,10 @@ def route_all(board, net_map):
     # B.Cu from (8,56.05) to (8,46) — does NOT cross +3V3 at y=45 (stops at y=46)
     add_track(board, net('+5V'), B_Cu, PWR_W, 8, pk1_coilp[1], 8, 46)
     # F.Cu hop at y=43-46 already placed by relay corridor above
-    # B.Cu from (8,43) to (8,36) — above +3V3/USB_D+, no crossing
-    add_track(board, net('+5V'), B_Cu, PWR_W, 8, 43, 8, pd1_k[1])
-    add_via(board, net('+5V'), 8, pd1_k[1], VIA_PWR_SIZE, VIA_PWR_DRILL)
-    add_track(board, net('+5V'), F_Cu, PWR_W, 8, pd1_k[1], pd1_k[0], pd1_k[1])
+    # B.Cu from (8,43) to (8,34.5) — above D1, via offset to avoid co-located hole with D1:1 THT
+    add_track(board, net('+5V'), B_Cu, PWR_W, 8, 43, 8, pd1_k[1] - 1.5)
+    add_via(board, net('+5V'), 8, pd1_k[1] - 1.5, VIA_PWR_SIZE, VIA_PWR_DRILL)
+    add_track(board, net('+5V'), F_Cu, PWR_W, 8, pd1_k[1] - 1.5, pd1_k[0], pd1_k[1])
 
     # ==========================================================
     # USB DATA ON F.Cu (left side, J1 -> U3)
@@ -539,6 +704,48 @@ def route_all(board, net_map):
     route_polyline(board, net('USB_D-'), F_Cu, SIG_W, [
         dm_via2, (dm_via2[0], p_dm_u[1]), p_dm_u,
     ])
+
+    # ==========================================================
+    # USB-C B-SIDE DATA: B6/B7 left unrouted (A/B pads interleave,
+    # clean routing requires 4-layer board). USB works in A-orientation
+    # and with USB-A to USB-C cables (most common use case).
+    # ==========================================================
+
+    # ==========================================================
+    # USB-C CC PULL-DOWNS (required for USB-C power sink)
+    # ==========================================================
+    # R6 at (5, 21.5) rot=90, R7 at (5, 24) rot=90
+    # Both rotated 90° so pads are vertical: pad1 at top (y-0.51), pad2 at bottom (y+0.51)
+    # GND vias route RIGHT to x=6.25 (safe B.Cu between +3V3@x=5 and +5V@x=8)
+
+    # CC1: J1:A5 -> R6:1 (pad at top of R6)
+    p_cc1_j = p('J1', 'A5')
+    p_r6_1 = p('R6', '1')
+    p_r6_2 = p('R6', '2')
+    # A5 at (4.75, 26.32), R6:1 at ~(5, 22.01)
+    # Exit A5 NORTH first (y=25.2) to clear USB pads at y=26.32 (B8@4.25 is 0.225mm gap)
+    # Then jog left to x=4.2 (safe corridor: VBUS@3.6 gap 0.35mm, R7@5.0 gap 0.475mm)
+    route_polyline(board, net('CC1'), F_Cu, SIG_W, [
+        p_cc1_j,                        # A5 at (4.75, 26.32)
+        (p_cc1_j[0], 25.2),           # North to y=25.2 (clear of all USB pads)
+        (4.2, 25.2),                    # Left to x=4.2
+        (4.2, p_r6_1[1]),             # North to R6:1 y
+        p_r6_1,                         # Right to R6:1
+    ])
+    # R6:2 GND: route RIGHT from pad2 to x=6.25, then via
+    # x=6.25 is safe on B.Cu: +3V3 edge at 5.25, +5V edge at 7.75
+    add_track(board, net('GND'), F_Cu, SIG_W, p_r6_2[0], p_r6_2[1], 6.25, p_r6_2[1])
+    add_via(board, net('GND'), 6.25, p_r6_2[1])
+
+    # CC2: J1:B5 -> R7:1 (pad at top of R7)
+    p_cc2_j = p('J1', 'B5')
+    p_r7_1 = p('R7', '1')
+    p_r7_2 = p('R7', '2')
+    # B5 at (7.75, 26.32), R7:1 at ~(5, 23.49) — vertical then horizontal
+    route_manhattan(board, net('CC2'), F_Cu, SIG_W, p_cc2_j, p_r7_1, horiz_first=False)
+    # R7:2 GND: route RIGHT from pad2 to x=6.25, then via
+    add_track(board, net('GND'), F_Cu, SIG_W, p_r7_2[0], p_r7_2[1], 6.25, p_r7_2[1])
+    add_via(board, net('GND'), 6.25, p_r7_2[1])
 
     # ==========================================================
     # UART via B.Cu CHANNELS (non-crossing plan)
@@ -735,28 +942,27 @@ def route_all(board, net_map):
         p_r3_2, (p_r3_2[0], 53.5), (p_q1_2[0], 53.5), p_q1_2,
     ])
 
-    # RELAY_COIL: Q1:3 -> K1:1 via B.Cu bridge (avoids ESP_RX, ESP_TX, all F.Cu crossings)
+    # RELAY_COIL: Q1:3 -> K1:1 via B.Cu bridge
+    # Merges with D1:2 route at via (20, 50)
     p_q1_3 = p('Q1', '3')
     p_k1_1 = p('K1', '1')
-    add_track(board, net('RELAY_COIL'), F_Cu, SIG_W, p_q1_3[0], p_q1_3[1], p_q1_3[0], 50)
+    route_manhattan(board, net('RELAY_COIL'), F_Cu, SIG_W, p_q1_3, (p_q1_3[0], 50), horiz_first=False)
     add_via(board, net('RELAY_COIL'), p_q1_3[0], 50)
-    add_track(board, net('RELAY_COIL'), B_Cu, SIG_W, p_q1_3[0], 50, p_k1_1[0], 50)
-    add_via(board, net('RELAY_COIL'), p_k1_1[0], 50)
-    # K1:1 via is at same position as pad, so it connects directly
+    add_track(board, net('RELAY_COIL'), B_Cu, SIG_W, p_q1_3[0], 50, 20, 50)
 
     # RELAY_COIL: D1:2 (anode) -> K1:1 via B.Cu bridge
     # D1:2 at (18.16,36), K1:1 at (22,50)
-    # Route: D1:2 right to x=21, via to B.Cu, left to x=20, down to y=50, via, F.Cu to K1:1
+    # Both Q1:3 and D1:2 now meet at via (20, 50) for a strong joint
     p_d1_2 = p('D1', '2')
-    add_track(board, net('RELAY_COIL'), F_Cu, SIG_W, p_d1_2[0], p_d1_2[1], 21, p_d1_2[1])
+    route_manhattan(board, net('RELAY_COIL'), F_Cu, SIG_W, p_d1_2, (21, p_d1_2[1]), horiz_first=True)
     add_via(board, net('RELAY_COIL'), 21, p_d1_2[1])
     route_polyline(board, net('RELAY_COIL'), B_Cu, SIG_W, [
-        (21, p_d1_2[1]),          # (21, 36)
-        (20, p_d1_2[1]),          # Left to x=20 (extra clearance from K1:1 PTH at x=22)
-        (20, p_k1_1[1]),          # (20, 50) down
+        (21, p_d1_2[1]),
+        (20, p_d1_2[1]),
+        (20, 50),
     ])
-    add_via(board, net('RELAY_COIL'), 20, p_k1_1[1])
-    add_track(board, net('RELAY_COIL'), F_Cu, SIG_W, 20, p_k1_1[1], p_k1_1[0], p_k1_1[1])
+    add_via(board, net('RELAY_COIL'), 20, 50)
+    add_track(board, net('RELAY_COIL'), F_Cu, SIG_W, 20, 50, p_k1_1[0], p_k1_1[1])
 
     # ==========================================================
     # LED LOCAL ROUTES ON F.Cu
@@ -766,13 +972,9 @@ def route_all(board, net_map):
     route_manhattan(board, net('LED_PWR'), F_Cu, SIG_W,
                     p('R4', '1'), p('D2', '2'), horiz_first=True)
 
-    # LED_RELAY: R5:2 -> D3:2 (route at y=19.5 to avoid +5V F.Cu hop at x=8, y=15-18.5)
-    route_polyline(board, net('LED_RELAY'), F_Cu, SIG_W, [
-        p('R5', '2'),              # (10.91, 16)
-        (p('R5', '2')[0], 19.5),   # Down 3.5mm
-        (p('D3', '2')[0], 19.5),   # Horizontal at y=19.5 (below +5V via at y=18.5)
-        p('D3', '2'),              # Up to D3:2 = (6.94, 16)
-    ])
+    # LED_RELAY: R5:2 -> D3:2
+    route_manhattan(board, net('LED_RELAY'), F_Cu, SIG_W,
+                    p('R5', '2'), p('D3', '2'), horiz_first=False)
 
     # ==========================================================
     # RELAY OUTPUTS ON F.Cu (bottom, horizontal to J2)
@@ -784,19 +986,10 @@ def route_all(board, net_map):
     p_j2_2 = p('J2', '2')
 
     # RELAY_COM: K1:5 -> J2:1
-    route_polyline(board, net('RELAY_COM'), F_Cu, PWR_W, [
-        p_k1_5,
-        (p_k1_5[0], p_j2_1[1]),  # Match J2 Y first
-        p_j2_1,                    # Horizontal to J2
-    ])
+    route_manhattan(board, net('RELAY_COM'), F_Cu, PWR_W, p_k1_5, p_j2_1, horiz_first=False)
 
-    # RELAY_NO: K1:4 -> J2:2 (offset Y to avoid crossing COM)
-    route_polyline(board, net('RELAY_NO'), F_Cu, PWR_W, [
-        p_k1_4,
-        (p_k1_4[0], p_k1_4[1] + 4),  # Down 4mm
-        (p_j2_2[0], p_k1_4[1] + 4),   # Horizontal
-        p_j2_2,                         # Up to J2
-    ])
+    # RELAY_NO: K1:4 -> J2:2
+    route_manhattan(board, net('RELAY_NO'), F_Cu, PWR_W, p_k1_4, p_j2_2, horiz_first=False)
 
     # ==========================================================
     # GND CONNECTIONS (manually placed vias at safe positions)
@@ -809,9 +1002,9 @@ def route_all(board, net_map):
         ('C2', '2', 0, 2),      # Below C2 (away from +3V3 horizontal at y=4)
         ('C3', '2', 0, -2),     # Above C3 (away from +3V3 via start)
         ('C5', '2', 0, 2),      # Below C5:2 at y=8 (avoids +3V3 horizontal at y=5)
-        ('C4', '2', -3, 2),     # Far left-below of C4:2 (clear of U1 with C4 at (44,15))
+        ('C4', '2', 0, 3),      # Straight below C4:2 (avoids ESP_EN horizontal at y=15)
         ('U2', '1', -2, 0),     # Left of U2 GND (away from +3V3 pin 2)
-        ('U3', '3', -3.5, -1.5),  # Left and above U3:3 (avoids USB_D+ at y=44)
+        ('U3', '3', 0.7, 0),    # Right of U3:3 — via at (14.25, 43.5), clears U3:2 pad by 0.215mm
         ('U3', '29', 0, 0),     # Via at pad position (avoids track through U3 right-side pads)
         ('Q1', '1', -2, 0),     # Left of Q1 (away from relay traces)
         ('D2', '1', 0, 2),      # Below D2
@@ -828,38 +1021,25 @@ def route_all(board, net_map):
         add_track(board, net('GND'), F_Cu, SIG_W, px, py, vx, vy)
         add_via(board, net('GND'), vx, vy)
 
-    # Connect U3 GND pads: U3:3 at (13.55,43.5) to U3:29 at (16,44)
-    # Both pads connect to B.Cu GND zone via their respective vias
-    # U3:3 via at (10.05,42) — short track from pad
-    # U3:29 via at (20,44) — track goes right from pad
-    # Connect pads directly: (13.55,43.5) -> (16,43.5) -> (16,44) [U3:29 pad]
-    pu3_3 = p('U3', '3')
-    pu3_29 = p('U3', '29')
-    route_polyline(board, net('GND'), F_Cu, SIG_W, [
-        (pu3_3[0], pu3_3[1]),         # U3:3 pad = (13.55, 43.5)
-        (pu3_29[0], pu3_3[1]),         # Right to U3:29 x at U3:3 y
-        (pu3_29[0], pu3_29[1]),        # Down to U3:29
-    ])
+    # U3 GND pads: U3:3 and U3:29 connect through B.Cu zone via their respective vias
+    # No F.Cu interlink — QFN pad density (0.5mm pitch) prevents safe F.Cu routing
 
-    # ESP32 GND pads: pin 1, 38 (side pads)
+    # Bridge GND zone island: B.Cu zone between +3V3 (x=5) and +5V (x=8/13) corridors
+    # is isolated from main zone. F.Cu hop across +3V3 vertical at y=46 connects them.
+    add_via(board, net('GND'), 6.2, 46)       # Inside island (right of +3V3 clearance)
+    add_track(board, net('GND'), F_Cu, SIG_W, 6.2, 46, 3.8, 46)  # F.Cu bridge
+    add_via(board, net('GND'), 3.8, 46)       # Outside island (left of +3V3 clearance)
+
+    # ESP32 GND pads: pin 1, 38 (side pads) - offset vias 1mm to avoid co-located holes
     for pad_num in ['1', '38']:
         pos = get_pad_pos(board, 'U1', pad_num)
         if pos:
-            add_via(board, net('GND'), pos[0], pos[1])
+            vx, vy = pos[0] - 1, pos[1]  # 1mm left of PTH pad
+            add_track(board, net('GND'), F_Cu, SIG_W, pos[0], pos[1], vx, vy)
+            add_via(board, net('GND'), vx, vy)
 
-    # ESP32 thermal pad 39 - sparse vias (every 5th to avoid drill_out_of_range)
-    for fp in board.GetFootprints():
-        if fp.GetReference() == 'U1':
-            pad39_positions = []
-            for pad in fp.Pads():
-                if pad.GetNumber() == '39':
-                    pos = pad.GetPosition()
-                    pad39_positions.append((pos.x / NM, pos.y / NM))
-            if pad39_positions:
-                for i, (px, py) in enumerate(pad39_positions):
-                    if i % 5 == 0:
-                        add_via(board, net('GND'), px, py)
-            break
+    # ESP32 thermal pad 39 - footprint already has PTH sub-pads that connect
+    # to B.Cu GND zone. No additional vias needed (they cause hole-to-hole errors).
 
     # J1 USB GND - each pad gets via SOUTH to B.Cu GND plane (no F.Cu chains)
     p_b12 = p('J1', 'B12')
@@ -925,6 +1105,57 @@ def route_all(board, net_map):
 # ============================================================
 # MAIN
 # ============================================================
+
+def export_bom(board):
+    """Export Bill of Materials in JLCPCB format."""
+    print(f"\nExporting BOM to {BOM_OUT}...")
+    
+    # Group components by Value, Footprint, and LCSC Part Number
+    # JLCPCB format: Comment, Designator, Footprint, LCSC Part Number
+    bom_data = {}
+    for fp in board.GetFootprints():
+        ref = str(fp.GetReference())
+        if ref.startswith('H'): continue # Skip mounting holes
+        
+        val = str(COMP_VALUES.get(ref, fp.GetValue()))
+        lib_fp = str(fp.GetFPID().GetLibItemName())
+        lcsc = str(LCSC_PARTS.get(ref, ""))
+        
+        key = (val, lib_fp, lcsc)
+        bom_data.setdefault(key, []).append(ref)
+    
+    with open(BOM_OUT, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Comment', 'Designator', 'Footprint', 'LCSC Part Number'])
+        for (val, fp_name, lcsc), refs in sorted(bom_data.items()):
+            writer.writerow([val, ",".join(sorted(refs)), fp_name, lcsc])
+    print(f"   BOM exported ({len(bom_data)} line items)")
+
+def export_cpl(board):
+    """Export Component Placement List in JLCPCB format."""
+    print(f"\nExporting CPL to {CPL_OUT}...")
+    
+    # JLCPCB format: Designator, Mid X, Mid Y, Layer, Rotation
+    # Coordinates in mm, relative to origin (0,0)
+    # Rotation in degrees
+    with open(CPL_OUT, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Designator', 'Mid X', 'Mid Y', 'Layer', 'Rotation'])
+        for fp in sorted(board.GetFootprints(), key=lambda x: x.GetReference()):
+            ref = fp.GetReference()
+            if ref.startswith('H'): continue # Skip mounting holes
+            
+            pos = fp.GetPosition()
+            rot = fp.GetOrientationDegrees()
+            layer = "Top" if fp.GetLayer() == pcbnew.F_Cu else "Bottom"
+            
+            # Use Mid X, Mid Y (center of footprint)
+            # In route_pcb.py, we used point(x, y) which is the anchor.
+            # Footprint centers are what JLCPCB needs.
+            # pcbnew GetPosition() returns the anchor.
+            # For most SMD parts in these libs, anchor == center.
+            writer.writerow([ref, pos.x / NM, -pos.y / NM, layer, rot])
+    print(f"   CPL exported")
 
 def main():
     print("=" * 60)
@@ -1016,44 +1247,94 @@ def main():
 
     # Step 5: GND zone on B.Cu (covers entire board)
     print("\n5. Adding GND zone on B.Cu...")
-    zone = pcbnew.ZONE(board)
-    zone.SetNet(net_map['GND'])
-    zone.SetLayer(B_Cu)
-    zone.SetIsRuleArea(False)
-    zone.SetDoNotAllowTracks(False)
-    zone.SetDoNotAllowVias(False)
-    zone.SetDoNotAllowPads(False)
-    zone.SetDoNotAllowCopperPour(False)
-    zone_ol = zone.Outline()
-    zone_ol.NewOutline()
-    zone_ol.Append(mm(0.5), mm(0.5))
-    zone_ol.Append(mm(BOARD_W - 0.5), mm(0.5))
-    zone_ol.Append(mm(BOARD_W - 0.5), mm(BOARD_H - 0.5))
-    zone_ol.Append(mm(0.5), mm(BOARD_H - 0.5))
-    zone.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL)
-    zone.SetThermalReliefGap(mm(0.3))
-    zone.SetThermalReliefSpokeWidth(mm(0.5))
-    zone.SetMinThickness(mm(0.25))
-    board.Add(zone)
+    zone_b = pcbnew.ZONE(board)
+    zone_b.SetNet(net_map['GND'])
+    zone_b.SetLayer(B_Cu)
+    zone_b.SetIsRuleArea(False)
+    zone_b.SetDoNotAllowTracks(False)
+    zone_b.SetDoNotAllowVias(False)
+    zone_b.SetDoNotAllowPads(False)
+    zone_b.SetDoNotAllowCopperPour(False)
+    zone_ol_b = zone_b.Outline()
+    zone_ol_b.NewOutline()
+    zone_ol_b.Append(mm(0.5), mm(0.5))
+    zone_ol_b.Append(mm(BOARD_W - 0.5), mm(0.5))
+    zone_ol_b.Append(mm(BOARD_W - 0.5), mm(BOARD_H - 0.5))
+    zone_ol_b.Append(mm(0.5), mm(BOARD_H - 0.5))
+    zone_b.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL)
+    zone_b.SetThermalReliefGap(mm(0.3))
+    zone_b.SetThermalReliefSpokeWidth(mm(0.5))
+    zone_b.SetMinThickness(mm(0.15))
+    zone_b.SetLocalClearance(mm(0.3))
+    zone_b.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
+    board.Add(zone_b)
 
-    # NO explicit antenna keepout zones — the ESP32-WROOM-32 footprint
-    # has a built-in rule area for the antenna keepout that moves with
-    # the component. With ESP32 at (60, 15), the keepout is at
-    # y < 5.2 for x = [36, 84] — mostly off the top of the board.
+    # Step 5b: GND zone on F.Cu (Top Layer Ground Plane)
+    print("\n5b. Adding GND zone on F.Cu...")
+    zone_f = pcbnew.ZONE(board)
+    zone_f.SetNet(net_map['GND'])
+    zone_f.SetLayer(F_Cu)
+    zone_f.SetIsRuleArea(False)
+    zone_f.SetDoNotAllowTracks(False)
+    zone_f.SetDoNotAllowVias(False)
+    zone_f.SetDoNotAllowPads(False)
+    zone_f.SetDoNotAllowCopperPour(False)
+    zone_ol_f = zone_f.Outline()
+    zone_ol_f.NewOutline()
+    zone_ol_f.Append(mm(0.5), mm(0.5))
+    zone_ol_f.Append(mm(BOARD_W - 0.5), mm(0.5))
+    zone_ol_f.Append(mm(BOARD_W - 0.5), mm(BOARD_H - 0.5))
+    zone_ol_f.Append(mm(0.5), mm(BOARD_H - 0.5))
+    zone_f.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL)
+    zone_f.SetThermalReliefGap(mm(0.3))
+    zone_f.SetThermalReliefSpokeWidth(mm(0.5))
+    zone_f.SetMinThickness(mm(0.15))
+    zone_f.SetLocalClearance(mm(0.3))
+    zone_f.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
+    board.Add(zone_f)
+
+    # Copper keepout zones around NPTH holes
+    # M3 mounting holes: 3.2mm drill, radius 2.0
+    # J1 NPTH anchors: 0.8
+    npth_keepouts = [
+        ((3, 3), 3.5),
+        ((77, 12), 2.0),
+        ((3, 57), 3.5),
+        ((77, 40), 2.0),
+        ((3.11, 27.395), 0.8),
+        ((8.89, 27.395), 0.8),
+    ]
+    for (nx, ny), r in npth_keepouts:
+        for layer in [F_Cu, B_Cu]:
+            keepout = pcbnew.ZONE(board)
+            keepout.SetIsRuleArea(True)
+            keepout.SetDoNotAllowCopperPour(True)
+            keepout.SetDoNotAllowTracks(False)
+            keepout.SetDoNotAllowVias(False)
+            keepout.SetDoNotAllowPads(False)
+            keepout.SetLayer(layer)
+            ko = keepout.Outline()
+            ko.NewOutline()
+            ko.Append(mm(nx - r), mm(ny - r))
+            ko.Append(mm(nx + r), mm(ny - r))
+            ko.Append(mm(nx + r), mm(ny + r))
+            ko.Append(mm(nx - r), mm(ny + r))
+            board.Add(keepout)
+    print(f"   {len(npth_keepouts)} NPTH keepout zones added (both layers)")
 
     # Step 6: GND via stitching (perimeter + strategic interior)
     print("\n6. Adding GND via stitching...")
     stitch = [
         # Perimeter
-        (9, 5), (35, 5),  # Removed (20,5) - was on +5V track at x=20
-        (14, 48), (12, 55),  # x=14 avoids +5V B.Cu at x=12.5; y=48 avoids +3V3 route at y=46
-        # Removed (12, 25) — conflicts with VBUS A9 route at y=25
+        (9, 5), (35, 5), (55, 5), (70, 5),
+        (30, 56), (12, 55), (25, 56), (45, 56),
         (40, 55), (60, 55), (75, 55),
-        (75, 40), (75, 25),
-        # Interior strategic points (between component groups)
-        (20, 20), (35, 20), (35, 35),
-        (50, 42), (65, 42),  # Moved below ESP_EN (y=36) and ESP_IO0 (y=38) B.Cu corridors
-        (20, 35),
+        (75, 40), (75, 25), (75, 15),
+        (5, 10), (5, 40), (5, 50),
+        # Interior strategic points
+        (20, 20), (35, 20), (35, 35), (25, 30),
+        (50, 42), (65, 42), (55, 30),
+        (20, 35), (15, 25), (45, 10), (60, 35),
     ]
     for vx, vy in stitch:
         add_via(board, net_map['GND'], vx, vy)
@@ -1070,6 +1351,10 @@ def main():
     pcbnew.SaveBoard(PCB_OUT, board)
     print(f"   Saved to {PCB_OUT}")
 
+    # Step 9: Export BOM and CPL
+    export_bom(board)
+    export_cpl(board)
+
     # Summary
     fps = board.GetFootprints()
     tracks = board.GetTracks()
@@ -1082,6 +1367,7 @@ def main():
     print(f"  Tracks: {n_tracks}, Vias: {n_vias}")
     print(f"  Zones: {len(board.Zones())}")
     print(f"{'=' * 60}")
+
 
 
 if __name__ == '__main__':
