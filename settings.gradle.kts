@@ -21,5 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Safe Switch"
 include(":app")
-include(":app")
- 
