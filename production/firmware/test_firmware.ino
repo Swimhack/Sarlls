@@ -21,7 +21,7 @@
  * - Board: ESP32 Dev Module
  * - Upload Speed: 115200
  * - Flash Frequency: 40MHz
- * - Partition Scheme: Default
+ * - Partition Scheme: Huge APP (3MB No OTA/1MB SPIFFS)
  */
 
 #include <WiFi.h>

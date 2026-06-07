@@ -1,0 +1,11 @@
+### Footprint positions - created on Wed May  6 20:20:41 2026 ###
+### Printed by KiCad version 7.0.11+dfsg-1build4
+## Unit = inches, Angle = deg.
+## Side : All
+# Ref     Val             Package                       PosX       PosY       Rot  Side
+K1        G5LE-1          Relay_SPDT_Omron_G5LE-1     8.4000    -4.0000    0.0000  top
+Q1        IRLZ44N         TO-220-3_Vertical           7.5000    -4.7000    0.0000  top
+U1        ESP32-WROOM-32  ESP32-WROOM-32              5.0000    -4.0000    0.0000  top
+U2        LM2596S-3.3     TO-263-5_TabPin3            3.0000    -3.5000    0.0000  top
+U3        AMS1117-5.0     SOT-223-3_TabPin2           3.0000    -4.4000    0.0000  top
+## End

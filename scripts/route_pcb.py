@@ -154,7 +154,7 @@ NET_NAMES = [
 COMPONENTS = [
     # ref, lib_dir, fp_name, x, y, rot
     # Power supply area (top-left, y=4-16)
-    ('J1',  'Connector_USB',      'USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal', 6, 30, 0),
+    ('J1',  'Connector_USB',      'USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal', 4, 30, 90),
     ('FB1', 'Inductor_SMD',       'L_0805_2012Metric',            18, 8, 0),
     ('U2',  'Package_TO_SOT_SMD', 'SOT-223-3_TabPin2',            26, 8, 0),
     ('C1',  'Capacitor_SMD',      'C_0805_2012Metric',            18, 4, 0),
@@ -182,7 +182,7 @@ COMPONENTS = [
     ('R3',  'Resistor_SMD',       'R_0805_2012Metric',            14, 52, 0),
     ('Q1',  'Package_TO_SOT_SMD', 'SOT-23',                       8, 52, 0),
     ('K1',  'Relay_THT',          'Relay_SPDT_SANYOU_SRD_Series_Form_C', 22, 50, 0),
-    ('D1',  'Diode_THT',          'D_DO-41_SOD81_P10.16mm_Horizontal', 8, 36, 0),
+    ('D1',  'Diode_THT',          'D_DO-41_SOD81_P10.16mm_Horizontal', 30, 40, 0),
 
     # Output terminal (bottom-right)
     ('J2',  'Connector_Phoenix_MC', 'PhoenixContact_MC_1,5_2-G-3.81_1x02_P3.81mm_Horizontal', 72, 52, 0),
@@ -196,8 +196,8 @@ COMPONENTS = [
     # USB-C CC pull-down resistors — rotated 90°, stacked vertically at x=5
     # Between VBUS F.Cu (x=3.6) and +3V3 B.Cu (x=5) / +5V B.Cu (x=8)
     # GND vias route right to x=6.25 (safe B.Cu corridor)
-    ('R6',  'Resistor_SMD',       'R_0402_1005Metric',            5, 21.5, 90),
-    ('R7',  'Resistor_SMD',       'R_0402_1005Metric',            5, 24, 90),
+    ('R6',  'Resistor_SMD',       'R_0402_1005Metric',            4, 38, 90),
+    ('R7',  'Resistor_SMD',       'R_0402_1005Metric',            4, 22, 90),
 
     # AMS1117 output bulk capacitor (above C2, on +3V3 rail)
     # y=1.3: clears +3V3 F.Cu at y=2.75 (gap 0.775mm) and board edge at y=0 (gap 0.875mm)
@@ -226,10 +226,8 @@ PAD_NETS = {
     ('J1', 'A5'): 'CC1', ('J1', 'B5'): 'CC2',
     ('J1', 'A6'): 'USB_D+', ('J1', 'A7'): 'USB_D-',
     # B6/B7 left unassigned — B-side data requires 4-layer board for clean routing
-    ('J1', 'A8'): 'GND',   # SBU1 — assign GND for routing
     ('J1', 'S1'): 'GND', ('J1', 'B1'): 'GND',
     ('J1', 'B4'): 'VBUS',  # B4 shares position with A9
-    ('J1', 'B8'): 'GND',   # SBU2
     ('J1', 'B12'): 'GND', ('J1', 'A12'): 'GND',
     ('J1', 'A9'): 'VBUS', ('J1', 'B9'): 'VBUS',
 
@@ -470,13 +468,19 @@ def route_all(board, net_map):
     # POWER TRACES ON F.Cu (0.5mm)
     # ==========================================================
 
-    # VBUS: J1:A4 -> FB1:1 (left side, going up)
+    # VBUS: edge-mounted J1:A4 -> FB1:1. The connector locating hole
+    # blocks a top-layer escape, so transition through a small via in pad.
     p_vbus = p('J1', 'A4')
     p_fb1_1 = p('FB1', '1')
+    add_track(board, net('VBUS'), F_Cu, SIG_W,
+              p_vbus[0], p_vbus[1], 0.7, p_vbus[1])
+    add_via(board, net('VBUS'), 0.7, p_vbus[1], 0.4, 0.2)
+    route_polyline(board, net('VBUS'), B_Cu, SIG_W, [
+        (0.7, p_vbus[1]), (0.7, 32.0), (2.0, 32.0),
+    ])
+    add_via(board, net('VBUS'), 2.0, 32.0, 0.4, 0.2)
     route_polyline(board, net('VBUS'), F_Cu, PWR_W, [
-        p_vbus,
-        (p_vbus[0], p_fb1_1[1]),  # Vertical up
-        p_fb1_1,                   # Horizontal to FB1
+        (2.0, 32.0), (12, 32.0), (12, p_fb1_1[1]), p_fb1_1,
     ])
 
     # +5V: FB1:2 -> C1:1 via y=6 (avoids VBUS horizontal at y=8 AND C1:2 GND at y=4)
@@ -546,8 +550,12 @@ def route_all(board, net_map):
     via_3v3_end = (10, 45)  # Far enough from USB_D- via at (11.55, 44.5)
     route_polyline(board, net('+3V3'), B_Cu, PWR_W, [
         via_3v3_start,
-        (5, via_3v3_start[1]),      # Left to x=5
-        (5, 42),                     # Down to y=42 (gap start)
+        (5, via_3v3_start[1]),
+        (5, 22),
+        (6.5, 22),
+        (6.5, 38),
+        (5, 38),
+        (5, 42),
     ])
     add_via(board, net('+3V3'), 5, 42, VIA_PWR_SIZE, VIA_PWR_DRILL)
     add_track(board, net('+3V3'), F_Cu, PWR_W, 5, 42, 5, 44.5)  # F.Cu hop over gap
@@ -645,14 +653,9 @@ def route_all(board, net_map):
     add_via(board, net('+5V'), 8, 15, VIA_PWR_SIZE, VIA_PWR_DRILL)
     add_track(board, net('+5V'), F_Cu, PWR_W, 8, 15, 8, 18.5)
     add_via(board, net('+5V'), 8, 18.5, VIA_PWR_SIZE, VIA_PWR_DRILL)
-    # Segment 2: B.Cu y=18.5 to y=28.5 (before USB_D- at y=29.32)
-    add_track(board, net('+5V'), B_Cu, PWR_W, 8, 18.5, 8, 28.5)
-    # Hop 2: F.Cu over USB_D- horizontal at y=29.32
-    add_via(board, net('+5V'), 8, 28.5, VIA_PWR_SIZE, VIA_PWR_DRILL)
-    add_track(board, net('+5V'), F_Cu, PWR_W, 8, 28.5, 8, 30.5)
-    add_via(board, net('+5V'), 8, 30.5, VIA_PWR_SIZE, VIA_PWR_DRILL)
-    # Segment 3: B.Cu y=30.5 to y=43 (before +3V3 at y=45, avoids USB_D+ at y=44)
-    add_track(board, net('+5V'), B_Cu, PWR_W, 8, 30.5, 8, 43)
+    # Segment 2: B.Cu y=18.5 to y=43. Rev 2 USB and CC routes no longer
+    # require the old F.Cu hop around y=29.
+    add_track(board, net('+5V'), B_Cu, PWR_W, 8, 18.5, 8, 43)
     # Hop 3: F.Cu over USB_D+ (y=44) and +3V3 (y=45)
     add_via(board, net('+5V'), 8, 43, VIA_PWR_SIZE, VIA_PWR_DRILL)
     add_track(board, net('+5V'), F_Cu, PWR_W, 8, 43, 8, 46)
@@ -665,15 +668,13 @@ def route_all(board, net_map):
     add_track(board, net('+5V'), F_Cu, PWR_W, via_5v_relay_end[0], via_5v_relay_end[1], pk1_coilp[0], pk1_coilp[1])
     # +5V to flyback diode D1:1 at (8, 36) from K1:2 at (23.95, 56.05)
     # Route on F.Cu to x=8, via to B.Cu, broken segments reusing hops at y=44/46
-    add_track(board, net('+5V'), F_Cu, PWR_W, pk1_coilp[0], pk1_coilp[1], 8, pk1_coilp[1])
-    add_via(board, net('+5V'), 8, pk1_coilp[1], VIA_PWR_SIZE, VIA_PWR_DRILL)
+    add_via(board, net('+5V'), 13, 36, VIA_PWR_SIZE, VIA_PWR_DRILL)
     # B.Cu from (8,56.05) to (8,46) — does NOT cross +3V3 at y=45 (stops at y=46)
-    add_track(board, net('+5V'), B_Cu, PWR_W, 8, pk1_coilp[1], 8, 46)
+    route_polyline(board, net('+5V'), F_Cu, PWR_W, [
+        (13, 36), (13, 30), (pd1_k[0], 30), pd1_k,
+    ])
     # F.Cu hop at y=43-46 already placed by relay corridor above
     # B.Cu from (8,43) to (8,34.5) — above D1, via offset to avoid co-located hole with D1:1 THT
-    add_track(board, net('+5V'), B_Cu, PWR_W, 8, 43, 8, pd1_k[1] - 1.5)
-    add_via(board, net('+5V'), 8, pd1_k[1] - 1.5, VIA_PWR_SIZE, VIA_PWR_DRILL)
-    add_track(board, net('+5V'), F_Cu, PWR_W, 8, pd1_k[1] - 1.5, pd1_k[0], pd1_k[1])
 
     # ==========================================================
     # USB DATA ON F.Cu (left side, J1 -> U3)
@@ -681,28 +682,28 @@ def route_all(board, net_map):
     # Route USB_D+ and D- as L-shapes avoiding GND traces
     p_dp_j = p('J1', 'A6')
     p_dp_u = p('U3', '4')
-    # Route at y=42, approach U3:4 via x=9 (left of GND via at x=10.05 and GND trace y=43.5)
+    add_track(board, net('USB_D+'), F_Cu, SIG_W, p_dp_j[0], p_dp_j[1], 2.5, p_dp_j[1])
+    add_via(board, net('USB_D+'), 2.5, p_dp_j[1], 0.4, 0.2)
+    add_track(board, net('USB_D+'), B_Cu, SIG_W, 2.5, p_dp_j[1], 2.5, 41)
+    add_via(board, net('USB_D+'), 2.5, 41)
     route_polyline(board, net('USB_D+'), F_Cu, SIG_W, [
-        p_dp_j,
-        (p_dp_j[0], 42),          # Vertical down to y=42
-        (9, 42),                   # Horizontal to x=9
-        (9, p_dp_u[1]),           # Down to U3:4 y=44
-        p_dp_u,                    # Right to U3:4 pad at (13.55, 44)
+        (2.5, 41), (9.5, 41),
     ])
+    add_via(board, net('USB_D+'), 9.5, 41)
+    route_polyline(board, net('USB_D+'), B_Cu, SIG_W, [
+        (9.5, 41), (9.5, 44), (12, 44),
+    ])
+    add_via(board, net('USB_D+'), 12, 44, 0.4, 0.2)
+    add_track(board, net('USB_D+'), F_Cu, SIG_W, 12, 44, p_dp_u[0], p_dp_u[1])
 
     p_dm_j = p('J1', 'A7')
     p_dm_u = p('U3', '5')
-    # USB D- via B.Cu hop to avoid crossing D+ (both go to same U3 x=13.55)
-    # Extend B.Cu to near U3 so F.Cu stub is short and doesn't cross D+ at y=44
-    dm_via1 = (7, p_dm_j[1] + 3)              # Shifted right for USB_D+ clearance (>0.25mm)
-    dm_via2 = (p_dm_u[0] - 2, p_dm_u[1] + 0.5) # y=45 clears USB_D+ at y=44 (0.575mm gap)
-    add_track(board, net('USB_D-'), F_Cu, SIG_W, p_dm_j[0], p_dm_j[1], dm_via1[0], dm_via1[1])
-    add_via(board, net('USB_D-'), dm_via1[0], dm_via1[1])
-    route_manhattan(board, net('USB_D-'), B_Cu, SIG_W, dm_via1, dm_via2, horiz_first=True)
-    add_via(board, net('USB_D-'), dm_via2[0], dm_via2[1])
-    # F.Cu stub: via (11.55,45) -> down to (11.55,44.5) -> right to U3:5 (13.55,44.5)
+    add_track(board, net('USB_D-'), F_Cu, SIG_W, p_dm_j[0], p_dm_j[1], 3.5, p_dm_j[1])
+    add_via(board, net('USB_D-'), 3.5, p_dm_j[1])
+    add_track(board, net('USB_D-'), B_Cu, SIG_W, 3.5, p_dm_j[1], 3.5, 40)
+    add_via(board, net('USB_D-'), 3.5, 40)
     route_polyline(board, net('USB_D-'), F_Cu, SIG_W, [
-        dm_via2, (dm_via2[0], p_dm_u[1]), p_dm_u,
+        (3.5, 40), (11, 40), (11, p_dm_u[1]), p_dm_u,
     ])
 
     # ==========================================================
@@ -725,27 +726,25 @@ def route_all(board, net_map):
     # A5 at (4.75, 26.32), R6:1 at ~(5, 22.01)
     # Exit A5 NORTH first (y=25.2) to clear USB pads at y=26.32 (B8@4.25 is 0.225mm gap)
     # Then jog left to x=4.2 (safe corridor: VBUS@3.6 gap 0.35mm, R7@5.0 gap 0.475mm)
+    add_track(board, net('CC1'), F_Cu, SIG_W, p_cc1_j[0], p_cc1_j[1], 11, p_cc1_j[1])
+    add_via(board, net('CC1'), 11, p_cc1_j[1])
+    add_track(board, net('CC1'), B_Cu, SIG_W, 11, p_cc1_j[1], 11, 37)
+    add_via(board, net('CC1'), 11, 37)
     route_polyline(board, net('CC1'), F_Cu, SIG_W, [
-        p_cc1_j,                        # A5 at (4.75, 26.32)
-        (p_cc1_j[0], 25.2),           # North to y=25.2 (clear of all USB pads)
-        (4.2, 25.2),                    # Left to x=4.2
-        (4.2, p_r6_1[1]),             # North to R6:1 y
-        p_r6_1,                         # Right to R6:1
+        (11, 37), (11, 39.2), (4, 39.2), p_r6_1,
     ])
     # R6:2 GND: route RIGHT from pad2 to x=6.25, then via
     # x=6.25 is safe on B.Cu: +3V3 edge at 5.25, +5V edge at 7.75
-    add_track(board, net('GND'), F_Cu, SIG_W, p_r6_2[0], p_r6_2[1], 6.25, p_r6_2[1])
-    add_via(board, net('GND'), 6.25, p_r6_2[1])
 
-    # CC2: J1:B5 -> R7:1 (pad at top of R7)
+    # CC2: J1:B5 -> R7:1 (pad at top of R7). Keep it on F.Cu and below
+    # the lower VBUS escape's short F.Cu hop.
     p_cc2_j = p('J1', 'B5')
     p_r7_1 = p('R7', '1')
     p_r7_2 = p('R7', '2')
-    # B5 at (7.75, 26.32), R7:1 at ~(5, 23.49) — vertical then horizontal
-    route_manhattan(board, net('CC2'), F_Cu, SIG_W, p_cc2_j, p_r7_1, horiz_first=False)
-    # R7:2 GND: route RIGHT from pad2 to x=6.25, then via
-    add_track(board, net('GND'), F_Cu, SIG_W, p_r7_2[0], p_r7_2[1], 6.25, p_r7_2[1])
-    add_via(board, net('GND'), 6.25, p_r7_2[1])
+    route_polyline(board, net('CC2'), F_Cu, SIG_W, [
+        p_cc2_j, (2, p_cc2_j[1]), (2.5, 29), (10.5, 29),
+        (10.5, 23.5), (4, 23.5), p_r7_1,
+    ])
 
     # ==========================================================
     # UART via B.Cu CHANNELS (non-crossing plan)
@@ -954,11 +953,11 @@ def route_all(board, net_map):
     # D1:2 at (18.16,36), K1:1 at (22,50)
     # Both Q1:3 and D1:2 now meet at via (20, 50) for a strong joint
     p_d1_2 = p('D1', '2')
-    route_manhattan(board, net('RELAY_COIL'), F_Cu, SIG_W, p_d1_2, (21, p_d1_2[1]), horiz_first=True)
-    add_via(board, net('RELAY_COIL'), 21, p_d1_2[1])
+    route_manhattan(board, net('RELAY_COIL'), F_Cu, SIG_W, p_d1_2, (38, p_d1_2[1]), horiz_first=True)
+    add_via(board, net('RELAY_COIL'), 38, p_d1_2[1])
     route_polyline(board, net('RELAY_COIL'), B_Cu, SIG_W, [
-        (21, p_d1_2[1]),
-        (20, p_d1_2[1]),
+        (38, p_d1_2[1]),
+        (38, 50),
         (20, 50),
     ])
     add_via(board, net('RELAY_COIL'), 20, 50)
@@ -973,8 +972,9 @@ def route_all(board, net_map):
                     p('R4', '1'), p('D2', '2'), horiz_first=True)
 
     # LED_RELAY: R5:2 -> D3:2
-    route_manhattan(board, net('LED_RELAY'), F_Cu, SIG_W,
-                    p('R5', '2'), p('D3', '2'), horiz_first=False)
+    route_polyline(board, net('LED_RELAY'), F_Cu, SIG_W, [
+        p('R5', '2'), (p('R5', '2')[0], 19.2), (6.5, 19.2), p('D3', '2'),
+    ])
 
     # ==========================================================
     # RELAY OUTPUTS ON F.Cu (bottom, horizontal to J2)
@@ -985,11 +985,13 @@ def route_all(board, net_map):
     p_k1_4 = p('K1', '4')
     p_j2_2 = p('J2', '2')
 
-    # RELAY_COM: K1:5 -> J2:1
-    route_manhattan(board, net('RELAY_COM'), F_Cu, PWR_W, p_k1_5, p_j2_1, horiz_first=False)
-
-    # RELAY_NO: K1:4 -> J2:2
-    route_manhattan(board, net('RELAY_NO'), F_Cu, PWR_W, p_k1_4, p_j2_2, horiz_first=False)
+    # Keep the two output nets on separate horizontal corridors.
+    route_polyline(board, net('RELAY_COM'), F_Cu, PWR_W, [
+        p_k1_5, (p_k1_5[0], 47), (70, 47), (70, p_j2_1[1]), p_j2_1,
+    ])
+    route_polyline(board, net('RELAY_NO'), F_Cu, PWR_W, [
+        p_k1_4, (p_k1_4[0], 42), (p_j2_2[0], 42), p_j2_2,
+    ])
 
     # ==========================================================
     # GND CONNECTIONS (manually placed vias at safe positions)
@@ -1042,38 +1044,30 @@ def route_all(board, net_map):
     # to B.Cu GND zone. No additional vias needed (they cause hole-to-hole errors).
 
     # J1 USB GND - each pad gets via SOUTH to B.Cu GND plane (no F.Cu chains)
-    p_b12 = p('J1', 'B12')
-    p_b8 = p('J1', 'B8')
-    p_a8 = p('J1', 'A8')
     p_a12 = p('J1', 'A12')
+    p_a1 = p('J1', 'A1')
     # Shield pad connections (short, local)
-    add_track(board, net('GND'), F_Cu, SIG_W, p_b12[0], p_b12[1], 1.68, 26.89)  # B12 -> S1
-    add_track(board, net('GND'), F_Cu, SIG_W, p_a12[0], p_a12[1], 10.32, 26.89) # A12 -> S1
-    # Each GND pad drops south to a via (below VBUS, avoids +5V corridor at x=3/8)
-    for gnd_pos in [p_b12, p_b8, p_a8, p_a12]:
-        # Skip B12 (x=2.8) — too close to +5V B.Cu at x=3; use S1 connection instead
-        if abs(gnd_pos[0] - p_b12[0]) < 0.1:
-            continue
-        # A12 (x=9.2) needs special routing to avoid J1 NPTH at (8.89, 27.395)
-        if abs(gnd_pos[0] - p_a12[0]) < 0.1:
-            # Route right then south to clear NPTH and USB_D- B.Cu at y=29.32
-            route_polyline(board, net('GND'), F_Cu, SIG_W, [
-                gnd_pos, (10.5, gnd_pos[1]), (10.5, 31),
-            ])
-            add_via(board, net('GND'), 10.5, 31)
-        else:
-            add_track(board, net('GND'), F_Cu, SIG_W, gnd_pos[0], gnd_pos[1], gnd_pos[0], 28)
-            add_via(board, net('GND'), gnd_pos[0], 28)
+    add_track(board, net('GND'), F_Cu, SIG_W, p_a1[0], p_a1[1], 0.9, 34.32)
+    add_track(board, net('GND'), F_Cu, SIG_W, p_a12[0], p_a12[1], 0.9, 25.68)
 
     # J1 VBUS - A4/B9 already connected via main trace to FB1
-    # A9/B4 connects via separate F.Cu route to VBUS horizontal at y=8
+    # A9/B4 uses a via-in-pad escape around the lower locating hole, then
+    # a short F.Cu hop over the +5V B.Cu corridor before joining at x=12.
     p_a9 = p('J1', 'A9')
-    route_polyline(board, net('VBUS'), F_Cu, PWR_W, [
-        p_a9,                         # (8.4, 26.32)
-        (p_a9[0], 25),                # Up to y=25 (above J1 pad tops at ~25.55)
-        (12, 25),                     # Right to x=12 (past LED area)
-        (12, 8),                      # Up to VBUS horizontal at y=8
+    add_track(board, net('VBUS'), F_Cu, SIG_W,
+              p_a9[0], p_a9[1], 0.7, p_a9[1])
+    add_via(board, net('VBUS'), 0.7, p_a9[1], 0.4, 0.2)
+    route_polyline(board, net('VBUS'), B_Cu, SIG_W, [
+        (0.7, p_a9[1]), (0.7, 28.0), (2.5, 28.0),
     ])
+    add_track(board, net('VBUS'), B_Cu, PWR_W, 2.5, 28.0, 5.7, 28.0)
+    add_via(board, net('VBUS'), 5.7, 28.0, 0.4, 0.2)
+    add_track(board, net('VBUS'), F_Cu, PWR_W, 5.7, 28.0, 8.8, 28.0)
+    add_via(board, net('VBUS'), 8.8, 28.0, 0.4, 0.2)
+    route_polyline(board, net('VBUS'), B_Cu, PWR_W, [
+        (8.8, 28.0), (12, 28.0),
+    ])
+    add_via(board, net('VBUS'), 12, 28.0, 0.4, 0.2)
 
     # Button GND connections (bridge duplicate pads + via)
     for ref in ['SW1', 'SW2']:
@@ -1204,6 +1198,10 @@ def main():
                 net_name = PAD_NETS[key]
                 if net_name in net_map:
                     pad.SetNet(net_map[net_name])
+                    if ref == 'J1' and net_name == 'GND':
+                        # Edge-mounted USB-C ground and shield pads cannot form
+                        # two thermal spokes; connect them directly to the planes.
+                        pad.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_FULL)
                     assigned += 1
             elif pad_num == '' and ref == 'U3':
                 # QFN exposed pad fragments share pad 29 net (GND)
@@ -1301,8 +1299,8 @@ def main():
         ((77, 12), 2.0),
         ((3, 57), 3.5),
         ((77, 40), 2.0),
-        ((3.11, 27.395), 0.8),
-        ((8.89, 27.395), 0.8),
+        ((1.395, 27.11), 0.8),
+        ((1.395, 32.89), 0.8),
     ]
     for (nx, ny), r in npth_keepouts:
         for layer in [F_Cu, B_Cu]:
@@ -1327,13 +1325,13 @@ def main():
     stitch = [
         # Perimeter
         (9, 5), (35, 5), (55, 5), (70, 5),
-        (30, 56), (12, 55), (25, 56), (45, 56),
+        (12, 55),
         (40, 55), (60, 55), (75, 55),
         (75, 40), (75, 25), (75, 15),
-        (5, 10), (5, 40), (5, 50),
+        (5, 10), (5, 50),
         # Interior strategic points
-        (20, 20), (35, 20), (35, 35), (25, 30),
-        (50, 42), (65, 42), (55, 30),
+        (20, 20), (35, 20), (35, 35),
+        (55, 30),
         (20, 35), (15, 25), (45, 10), (60, 35),
     ]
     for vx, vy in stitch:

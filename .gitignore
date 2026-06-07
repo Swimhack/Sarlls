@@ -13,3 +13,13 @@ node_modules/
 .env
 .env.local
 *.log
+/.build/
+__pycache__/
+*.pyc
+/.control-room/
+/.superpowers/
+/control-room/node_modules/
+/control-room/dist/
+/control-room/coverage/
+/control-room/test-results/
+/control-room/playwright-report/

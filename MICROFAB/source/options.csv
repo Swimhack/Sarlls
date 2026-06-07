@@ -1,0 +1,4 @@
+"Option","What it is","Control","Pros","Cons","Good for"
+"Smart high‑side switch IC","An automotive solid‑state switch with built‑in protection","Direct MCU logic","Integrated short‑circuit, overtemp, reverse battery handling; slew‑rate control (tames inrush)","Higher cost than discrete","Robust, protected switching up to high currents"
+"Relay + driver","12 V automotive relay driven by a small transistor","MCU drives a transistor","Very low on‑loss, no leakage; simple","Mechanical wear, coil current, EMI, slower","High current, cost‑sensitive, simple systems"
+"Discrete PFET (or NFET + driver)","P‑channel MOSFET high‑side, or N‑channel with high‑side driver","MCU via gate network/driver","Solid‑state, low quiescent","Needs careful RDS(on)/thermal sizing, protection parts; PFETs run hotter for same die size","Medium currents; optimize cost/size/heat"
