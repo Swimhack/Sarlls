@@ -20,6 +20,7 @@ if (existsSync(clientDir)) {
   });
 }
 
-api.listen(port, '127.0.0.1', () => {
-  console.log(`SafeSwitch Control Room API: http://127.0.0.1:${port}`);
+const host = process.env.CONTROL_ROOM_HOST ?? '127.0.0.1';
+api.listen(port, host, () => {
+  console.log(`SafeSwitch Control Room API: http://${host}:${port}`);
 });

@@ -16,9 +16,14 @@ const ALLOWED_ORIGINS = new Set([
   'http://localhost:4173',
   'http://127.0.0.1:4174',
   'http://localhost:4174',
+  'https://sarlls.stricklandai.com',
+  'http://sarlls.stricklandai.com',
 ]);
 
-const LOCAL_HOSTS = new Set(['127.0.0.1', 'localhost', '::1']);
+const LOCAL_HOSTS = new Set([
+  '127.0.0.1', 'localhost', '::1',
+  'sarlls.stricklandai.com',
+]);
 
 const WorkflowBody = z.object({
   status: z.enum([
