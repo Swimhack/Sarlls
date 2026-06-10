@@ -42,7 +42,7 @@ const COMPONENTS = [
   { ref: 'U1', name: 'ESP32-WROOM-32', desc: 'WiFi/BLE MCU' },
   { ref: 'U2', name: 'AMS1117-3.3', desc: '3.3V LDO Regulator' },
   { ref: 'U3', name: 'CP2102N', desc: 'USB-UART Bridge' },
-  { ref: 'J1', name: 'USB-C (GCT USB4105)', desc: '5V Power Input' },
+  { ref: 'J1', name: 'USB-C (GCT USB4105)', desc: '5V power, edge mount (left)' },
   { ref: 'K1', name: 'SRD-05VDC-SL-C', desc: 'SPDT Relay 10A/250V' },
   { ref: 'J2', name: 'Terminal Block', desc: 'Relay Output' },
 ];
@@ -59,7 +59,7 @@ export function ModelViewerPage() {
     if (viewerRef.current) return; // already created
 
     const mv = document.createElement('model-viewer');
-    mv.setAttribute('src', '/api/model/pcb');
+    mv.setAttribute('src', '/api/model/pcb?v=20260609b');
     mv.setAttribute('alt', 'SafeSwitch ESP32 IoT Controller PCB');
     mv.setAttribute('auto-rotate', '');
     mv.setAttribute('auto-rotate-delay', '500');
@@ -70,7 +70,7 @@ export function ModelViewerPage() {
     mv.setAttribute('shadow-intensity', '1.2');
     mv.setAttribute('exposure', '1.1');
     mv.setAttribute('environment-image', 'neutral');
-    mv.setAttribute('camera-orbit', '45deg 65deg auto');
+    mv.setAttribute('camera-orbit', '270deg 72deg auto');
     mv.setAttribute('min-camera-orbit', 'auto auto 5%');
     mv.setAttribute('max-camera-orbit', 'auto auto 300%');
     mv.setAttribute('min-field-of-view', '10deg');

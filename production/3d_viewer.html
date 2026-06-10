@@ -90,12 +90,15 @@
 
   <div class="viewer-container">
     <model-viewer
-      src="ESP32_Simple_IoT_3D.glb"
+      src="ESP32_Simple_IoT_3D.glb?v=20260609b"
       alt="Sarlls IoT Smart Switch PCB - 3D Model"
       auto-rotate
       auto-rotate-delay="1000"
       rotation-per-second="20deg"
       camera-controls
+      camera-orbit="270deg 72deg auto"
+      min-camera-orbit="auto auto 5%"
+      max-camera-orbit="auto auto 300%"
       touch-action="pan-y"
       interaction-prompt="auto"
       shadow-intensity="1"

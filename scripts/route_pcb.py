@@ -17,6 +17,7 @@ Must be run with KiCad's Python:
 import pcbnew
 import os
 import csv
+import subprocess
 
 # ============================================================
 # CONSTANTS
@@ -28,6 +29,8 @@ PROD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 PCB_OUT = os.path.join(PROD_DIR, 'ESP32_Simple_IoT.kicad_pcb')
 BOM_OUT = os.path.join(PROD_DIR, 'ESP32_Simple_IoT_BOM.csv')
 CPL_OUT = os.path.join(PROD_DIR, 'ESP32_Simple_IoT_CPL.csv')
+GLB_OUT = os.path.join(PROD_DIR, 'ESP32_Simple_IoT_3D.glb')
+KICAD_BIN = r'C:\Users\james\AppData\Local\Programs\KiCad\9.0\bin'
 
 BOARD_W = 80.0
 BOARD_H = 60.0
@@ -154,7 +157,8 @@ NET_NAMES = [
 COMPONENTS = [
     # ref, lib_dir, fp_name, x, y, rot
     # Power supply area (top-left, y=4-16)
-    ('J1',  'Connector_USB',      'USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal', 4, 30, 90),
+    # rot=270: USB4105 opening faces left board edge (-X); rot=90 faces inward (+X)
+    ('J1',  'Connector_USB',      'USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal', 3, 30, 270),
     ('FB1', 'Inductor_SMD',       'L_0805_2012Metric',            18, 8, 0),
     ('U2',  'Package_TO_SOT_SMD', 'SOT-223-3_TabPin2',            26, 8, 0),
     ('C1',  'Capacitor_SMD',      'C_0805_2012Metric',            18, 4, 0),
@@ -1151,6 +1155,30 @@ def export_cpl(board):
             writer.writerow([ref, pos.x / NM, -pos.y / NM, layer, rot])
     print(f"   CPL exported")
 
+
+def export_glb():
+    """Export web 3D model (GLB) for production/3d_viewer.html."""
+    print(f"\nExporting 3D model to {GLB_OUT}...")
+    kicad_cli = os.path.join(KICAD_BIN, 'kicad-cli.exe')
+    result = subprocess.run(
+        [
+            kicad_cli, 'pcb', 'export', 'glb',
+            '--force',
+            '--output', GLB_OUT,
+            '--include-silkscreen',
+            '--include-soldermask',
+            '--subst-models',
+            PCB_OUT,
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print(f"   GLB export failed: {result.stderr or result.stdout}")
+        return
+    print("   GLB exported")
+
+
 def main():
     print("=" * 60)
     print("PCB Router v3 - ESP32 Simple IoT Switch")
@@ -1293,15 +1321,19 @@ def main():
 
     # Copper keepout zones around NPTH holes
     # M3 mounting holes: 3.2mm drill, radius 2.0
-    # J1 NPTH anchors: 0.8
     npth_keepouts = [
         ((3, 3), 3.5),
         ((77, 12), 2.0),
         ((3, 57), 3.5),
         ((77, 40), 2.0),
-        ((1.395, 27.11), 0.8),
-        ((1.395, 32.89), 0.8),
     ]
+    for fp in board.GetFootprints():
+        if fp.GetReference() != 'J1':
+            continue
+        for pad in fp.Pads():
+            if pad.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:
+                pos = pad.GetPosition()
+                npth_keepouts.append(((pos.x / NM, pos.y / NM), 0.8))
     for (nx, ny), r in npth_keepouts:
         for layer in [F_Cu, B_Cu]:
             keepout = pcbnew.ZONE(board)
@@ -1352,6 +1384,9 @@ def main():
     # Step 9: Export BOM and CPL
     export_bom(board)
     export_cpl(board)
+
+    # Step 10: Export 3D model for web viewer
+    export_glb()
 
     # Summary
     fps = board.GetFootprints()
