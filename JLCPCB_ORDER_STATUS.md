@@ -1,14 +1,14 @@
-# JLCPCB Order Status — 2026-06-26
+# JLCPCB Order Status — 2026-06-27
 
 **Order:** W2026050802124660 | PCB: Y5-10434062A | PCBA: SMT026050763002
 **Total:** $205.68 | Placed: 2026-05-07
 
-## Current Phase: MONITORING COMPLETE — 37 days past delivery window
+## Current Phase: MONITORING COMPLETE — 38 days past delivery window
 
 Delivery was expected May 18–20 via DHL Express to Katy TX 77493.
 
 ## Action for James Today
-- **If boards have NOT arrived:** Contact JLCPCB support — this is significantly overdue (37+ days).
+- **If boards have NOT arrived:** Contact JLCPCB support — this is significantly overdue (38+ days).
   DHL tracking: https://www.dhl.com/ | Order: https://jlcpcb.com/user-center/orders/
 - **If boards DID arrive:** See firmware steps below — you're all set.
 
