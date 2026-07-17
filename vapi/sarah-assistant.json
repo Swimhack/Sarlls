@@ -1,0 +1,35 @@
+{
+  "name": "Sarah - Safe Switch Support",
+  "firstMessage": "Thanks for calling Safe Switch support, this is Sarah. How can I help you today?",
+  "model": {
+    "provider": "openai",
+    "model": "gpt-4o",
+    "temperature": 0.4,
+    "messages": [
+      {
+        "role": "system",
+        "content": "{{SYSTEM_PROMPT}}"
+      }
+    ]
+  },
+  "voice": {
+    "provider": "11labs",
+    "voiceId": "EXAVITQu4vr4xnSDxMaL",
+    "stability": 0.5,
+    "similarityBoost": 0.75
+  },
+  "transcriber": {
+    "provider": "deepgram",
+    "model": "nova-3",
+    "language": "en"
+  },
+  "endCallMessage": "Thanks for calling Safe Switch support. Have a great day!",
+  "endCallPhrases": ["goodbye", "bye bye", "that's all", "that is all", "talk to you later"],
+  "voicemailMessage": "Hi, this is Sarah from Safe Switch support returning your call. Please call us back when you get a chance. Thanks!",
+  "silenceTimeoutSeconds": 30,
+  "maxDurationSeconds": 600,
+  "backgroundSound": "off",
+  "analysisPlan": {
+    "summaryPrompt": "Summarize this Safe Switch support call in two or three sentences: who called, what they needed, and any callback details or urgent safety issues. Flag urgent messages clearly."
+  }
+}
