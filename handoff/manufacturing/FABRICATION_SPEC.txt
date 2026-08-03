@@ -1,0 +1,65 @@
+SARLLS IOT SWITCH - REV 2 CONTROLLER PROTOTYPE
+FABRICATION SPECIFICATION
+Updated: 2026-06-06
+
+BOARD
+-----
+Size:                 80 mm x 60 mm
+Layer count:          2
+Thickness:            1.6 mm FR-4
+Copper:               1 oz
+Surface finish:       HASL lead-free or ENIG
+Solder mask:          Green, both sides
+Silkscreen:           White, top side
+Assembly side:        Top
+
+DESIGN RULES
+------------
+Minimum signal trace: 0.15 mm
+Typical signal trace: 0.20 mm
+Power trace:          0.50 mm
+Typical via:          0.60 mm pad / 0.30 mm drill
+Small J1 escape via:  0.40 mm pad / 0.20 mm drill
+Power via:            0.80 mm pad / 0.40 mm drill
+
+SPECIAL REVIEW ITEMS
+--------------------
+1. J1 is intentionally edge-mounted. Its contact pads and immediate escape
+   traces extend into the board-edge clearance rule area.
+2. J1 VBUS uses two 0.40/0.20 mm via-in-pad escapes. Confirm assembler process
+   acceptance and solder-wicking risk.
+3. Confirm selected SW1, SW2, and J2 parts match the footprints before order.
+4. K1, D1, and J2 are through-hole parts and may require manual assembly.
+
+DRC RELEASE RESULT
+------------------
+Unconnected items:            0
+Shorts:                       0
+Track crossings:              0
+Ordinary clearance errors:    0
+Hole-clearance errors:        0
+Approved J1 edge errors:     26
+Silkscreen warnings:         11
+
+The approved edge errors are limited to J1. Validate every release using:
+
+  scripts/validate_drc.py production/drc_report.json
+
+FABRICATION PACKAGE
+-------------------
+Use production/Sarlls_IoT_Switch_Rev2_JLCPCB.zip.
+
+The package contains:
+- F.Cu and B.Cu
+- F.Mask and B.Mask
+- F.Paste
+- F.Silkscreen and B.Silkscreen
+- Edge.Cuts
+- Gerber job file
+- Separate PTH and NPTH Excellon drill files
+
+PRODUCT LIMITATION
+------------------
+This PCB is a USB-C-powered controller prototype. It is not a complete
+automotive battery-disconnect product and does not include protected 12V
+vehicle power input or the high-current contactor.
