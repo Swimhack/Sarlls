@@ -186,7 +186,7 @@ COMPONENTS = [
     ('R3',  'Resistor_SMD',       'R_0805_2012Metric',            14, 52, 0),
     ('Q1',  'Package_TO_SOT_SMD', 'SOT-23',                       8, 52, 0),
     ('K1',  'Relay_THT',          'Relay_SPDT_SANYOU_SRD_Series_Form_C', 22, 50, 0),
-    ('D1',  'Diode_THT',          'D_DO-41_SOD81_P10.16mm_Horizontal', 30, 40, 0),
+    ('D1',  'Diode_THT',          'D_DO-41_SOD81_P10.16mm_Horizontal', 30, 38, 0),
 
     # Output terminal (bottom-right)
     ('J2',  'Connector_Phoenix_MC', 'PhoenixContact_MC_1,5_2-G-3.81_1x02_P3.81mm_Horizontal', 72, 52, 0),
@@ -954,13 +954,15 @@ def route_all(board, net_map):
     add_track(board, net('RELAY_COIL'), B_Cu, SIG_W, p_q1_3[0], 50, 20, 50)
 
     # RELAY_COIL: D1:2 (anode) -> K1:1 via B.Cu bridge
-    # D1:2 at (18.16,36), K1:1 at (22,50)
+    # D1:2 at (40.16,34), K1:1 at (22,50)
     # Both Q1:3 and D1:2 now meet at via (20, 50) for a strong joint
+    # Via at y=38 to avoid ESP_TX B.Cu corridor at y=34
     p_d1_2 = p('D1', '2')
     route_manhattan(board, net('RELAY_COIL'), F_Cu, SIG_W, p_d1_2, (38, p_d1_2[1]), horiz_first=True)
-    add_via(board, net('RELAY_COIL'), 38, p_d1_2[1])
+    add_track(board, net('RELAY_COIL'), F_Cu, SIG_W, 38, p_d1_2[1], 38, 38)
+    add_via(board, net('RELAY_COIL'), 38, 38)
     route_polyline(board, net('RELAY_COIL'), B_Cu, SIG_W, [
-        (38, p_d1_2[1]),
+        (38, 38),
         (38, 50),
         (20, 50),
     ])
