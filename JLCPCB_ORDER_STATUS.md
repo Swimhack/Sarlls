@@ -1,18 +1,17 @@
 # JLCPCB Order Status
 
-**Date:** 2026-08-07
-**Order:** W2026050802124660 (PCB: Y5-10434062A, PCBA: SMT026050763002)
+**Date:** 2026-08-08
+**Order:** W2026050802124660 | PCB: Y5-10434062A | PCBA: SMT026050763002
 
-## Status: MONITORING COMPLETE
+## Current Phase: MONITORING COMPLETE
 
-Order was placed 2026-05-07. Expected delivery was May 18-20, 2026.
-Today is August 7, 2026 — over 11 weeks past expected delivery.
+Expected delivery was May 18–20, 2026. We are now past the May 25 cutoff.
 
 ## Action Required
 
-**Boards have not been confirmed received.** Contact JLCPCB support immediately:
-- Order portal: https://jlcpcb.com/user-center/orders/
-- Support: https://jlcpcb.com/help/Contact
+If the boards have not yet arrived, contact JLCPCB support immediately:
+- Order page: https://jlcpcb.com/user-center/orders/
+- Reference order W2026050802124660
 
 ## When Boards Arrive
 
