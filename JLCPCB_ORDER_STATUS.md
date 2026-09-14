@@ -13,6 +13,7 @@ It is now September 14, 2026 — monitoring period ended May 25, 2026.
 **If boards have not arrived:** Contact JLCPCB support immediately.
 - Reference order W2026050802124660
 - Support: https://jlcpcb.com/user-center/orders/
+- Also check with DHL if a tracking number was received.
 
 **If boards have arrived:** Flash firmware and demo.
 1. Open `production/firmware/wifi_switch.ino` in Arduino IDE
