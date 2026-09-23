@@ -1,23 +1,20 @@
 # JLCPCB Order Status
 
-**Date:** 2026-09-21
-**Order:** W2026050802124660 | **Total:** $205.68 | **Placed:** 2026-05-07
+**Date:** 2026-09-23
+**Order:** W2026050802124660 | PCB: Y5-10434062A | PCBA: SMT026050763002
 
-## Current Phase: MONITORING COMPLETE
+## Status: MONITORING COMPLETE
 
-Today is 2026-09-21 — well past the May 25 monitoring deadline.
+Order was placed 2026-05-07. Expected delivery was May 18-20, 2026.
+It is now 2026-09-23 — well past the May 25 monitoring cutoff.
 
-**If boards have NOT arrived:** Contact JLCPCB support with order W2026050802124660.
-Also contact DHL with your tracking number if shipping was confirmed.
+## Action Required
 
-**If boards DID arrive:** Proceed with setup below.
+If boards have **not** arrived, contact JLCPCB support with order numbers above.
 
-## Board Setup (when in hand)
-1. Open `production/firmware/wifi_switch.ino` in Arduino IDE
-2. Flash firmware to board
-3. Connect to AP `Sarlls-Switch-XXXX` (password: `sarlls1234`)
-4. Configure WiFi via captive portal
-5. Demo for Eric at `http://sarlls-switch.local`
+## When Boards Arrive (if not already done)
 
----
-*Automated daily monitoring ended. No further updates scheduled.*
+1. Flash `production/firmware/wifi_switch.ino` via Arduino IDE
+2. Connect to AP `Sarlls-Switch-XXXX` (password: `sarlls1234`)
+3. Configure WiFi via captive portal
+4. Demo at http://sarlls-switch.local for Eric
