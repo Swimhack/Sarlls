@@ -1,16 +1,18 @@
-# JLCPCB Order Status — 2026-10-30
+# JLCPCB Order Status - 2026-10-31
 
-**Order:** W2026050802124660 | PCB: Y5-10434062A | PCBA: SMT026050763002
-
+**Order:** W2026050802124660  
+**Date:** 2026-10-31  
 **Phase:** MONITORING COMPLETE
 
-Order was placed 2026-05-07. Expected delivery was 2026-05-18 to 2026-05-20.
-Today is 2026-10-30 — over 5 months past the expected delivery date.
+---
 
-**Action required:** If boards have not arrived, contact JLCPCB support to investigate
-the order status. Reference order W2026050802124660.
-- JLCPCB support: https://jlcpcb.com/user-center/orders/
+Order was placed 2026-05-07. Expected delivery was May 18-20, 2026.
+It is now well past May 25 — daily monitoring is complete.
 
-**When boards arrive:** Flash `production/firmware/wifi_switch.ino`, connect to AP
-`Sarlls-Switch-XXXX` (password: sarlls1234), configure WiFi, then demo at
-http://sarlls-switch.local for Eric.
+**If boards never arrived:** Contact JLCPCB support at https://jlcpcb.com/user-center/orders/
+
+**When boards are in hand:**
+1. Flash `production/firmware/wifi_switch.ino` via Arduino IDE
+2. Connect to AP `Sarlls-Switch-XXXX` (password: `sarlls1234`)
+3. Configure WiFi via captive portal
+4. Demo at http://sarlls-switch.local for Eric
